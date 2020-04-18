@@ -1,12 +1,5 @@
 ;; -*-Scheme-*-
-#|
-(define-load-spec non-strict-arguments
-  ("shared-syntax" from "generic-interpreter")
-  ("shared-rtdata" from "generic-interpreter")
-  ("interp" from "generic-interpreter")
-  ("shared-repl" from "generic-interpreter")
-  ("repl" from "generic-interpreter")
-  "general-procedures"         ;overrides some handlers in interp
-  ("simple-examples" from "generic-interpreter" inline-test? #t)
-  ("kons" inline-test? #t))
-|#
+(define-load-spec adventure-game
+  ("*" from "user-defined-types")
+  ;; put files from this directory here
+  )
