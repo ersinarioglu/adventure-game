@@ -14,6 +14,13 @@
 
 
 ;;; Methods to add to world
+
+#|
+Things we need to make this work
+a) definition analyzer to check for name collisions
+b) (use-package <name>) syntax in loadspec
+|#
+
 ;; install package
 
 ;; install places
@@ -24,9 +31,17 @@
 
 
 ;;; Methods to remove from world
+
+#|
+Things we need to build to make this work:
+a) remove-handler message for generic
+    (override the common/generics file?
+b) 
+|#
+
 ;; uninstall package
 
-;; unintsall place
+;; uninstall place
 
 ;; uninstall rule
 

@@ -1,5 +1,6 @@
 ;; -*-Scheme-*-
 (define-load-spec adventure-game
   ("*" from "user-defined-types")
+  ("generic-procedures" override "common/generic-procedures")
   ;; put files from this directory here
   )
