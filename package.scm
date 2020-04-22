@@ -24,22 +24,22 @@
 (define make-package
   (type-instantiator package?))
 
-(define get-map
+(define get-package-map
   (property-getter package:map package?))
 
-(define set-map
+(define set-package-map
   (property-setter package:map package? package-map?))
 
-(define get-rules
+(define get-package-rules
   (property-getter package:rules package?))
 
-(define set-rules
+(define set-package-rules
   (property-setter package:rules package? package-rules?))
 
-(define get-objects
+(define get-package-objects
   (property-getter package:objects package?))
 
-(define set-objects
+(define set-package-objects
   (property-setter package:objects package? package-objects?))
 
 ;;; generic procedure handlers?
