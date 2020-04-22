@@ -4,6 +4,10 @@
 ;;; Gretchen Eggers, Ersin Arioglu, Nick Janovetz
 
 ;;; Package type definition
+(define package:name
+  (make-property 'name
+		 'predicate symbol?))
+
 (define package:map
   (make-property 'map
                  'predicate (lambda (x) (package-map? x))))
@@ -40,9 +44,10 @@
 
 ;;; generic procedure handlers?
 
-(define-generic-procedure-handler install-package! (match-args package?)
-  <...>
-  )
+(define-generic-procedure-handler install-package!
+  (match-args package?)
+  (lambda (package)
+    (manage 'add (get-name package))))
 
 (define-generic-procedure-handler uninstall-package! (match-args package?)
   <...>
