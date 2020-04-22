@@ -3,6 +3,23 @@
 ;;; Adventure World Package Manager
 ;;; Gretchen Eggers, Ersin Arioglu, Nick Janovetz
 
+;;; Analysis
+
+(install-in-global!) ; to get the simple-analyzer
+
+(define (extract-file-definitions filename environment)
+  (let* ((file-analysis (analyze-file filename environment))
+	 (definitions-analysis (car (analysis-children file-analysis))))
+    (analysis-bound definitions-analysis)))
+
+#| ## TODO ## 
+figure out how to see the definitions provided by manage with the simple analyzer
+(define (conflicts-with-environment? package environment) ... )
+|#
+
+
+;;; Package Management
+
 ;;; Methods to examine current adventure
 ;; list packages
 
@@ -15,9 +32,9 @@
 
 ;;; Methods to add to world
 
-#|
+#| ## TODO ##
 Things we need to make this work
-a) definition analyzer to check for name collisions
+a) analyzer (above)
 b) (use-package <name>) syntax in loadspec
 |#
 
@@ -32,11 +49,10 @@ b) (use-package <name>) syntax in loadspec
 
 ;;; Methods to remove from world
 
-#|
-Things we need to build to make this work:
+#| ## TODO ##
 a) remove-handler message for generic
     (override the common/generics file?
-b) 
+b) update package listing and checking dependencies
 |#
 
 ;; uninstall package
