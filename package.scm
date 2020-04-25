@@ -4,19 +4,15 @@
 ;;; Gretchen Eggers, Ersin Arioglu, Nick Janovetz
 
 ;;; Package type definition
-(define package:name
-  (make-property 'name
-		 'predicate symbol?))
-
 (define package:map
   (make-property 'map
-                 'predicate (lambda (x) (package-map? x))))
+                 'predicate package-map?))
 (define package:rules
   (make-property 'rules
-                 'predicate (lambda (x) (package-rules? x))))
+                 'predicate package-rules?))
 (define package:objects
   (make-property 'objects
-                 'predicate (lambda (x) (package-objects? x))))
+                 'predicate package-objects?))
 (define package?
   (make-type 'package (list package:map package:rules package:objects)))
 (set-predicate<=! package? object?)

@@ -5,4 +5,7 @@
   ;; put files from this directory here
   (load "package-manager")
   (load "package-substrate")
+  (load "package")
+  (load "objects")
+  (load "map")
   )

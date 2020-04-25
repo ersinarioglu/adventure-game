@@ -8,15 +8,14 @@
 
 (define package-map:places
   (make-property 'places
-		 'predicate (lambda (x)
-			      (and (n:list? x) (every place?)))
-		 'default-value '()))
+		 'predicate (is-list-of place?)
+                 'default-value '()))
 
 (define package-map?
   (make-type 'map (list package-map:places)))
 (set-predicate<=! package-map? package?)
 
-(define make-map
+(define make-package-map
   (type-instantiator package-map?))
 
 (define get-places
@@ -24,3 +23,10 @@
 
 (define add-place!
   (property-adder pacakge-map:places package-map? place?)) 
+
+(define-generic-procedure-handler install-package!
+  (match-args package-map?)
+  (lambda (package-map)
+    (for-each (lambda (place)
+                (manage add (get-name place)))
+              (get-places package-map))))

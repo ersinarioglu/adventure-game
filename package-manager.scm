@@ -12,11 +12,22 @@
 	 (definitions-analysis (car (analysis-children file-analysis))))
     (analysis-bound definitions-analysis)))
 
+;;; Install default package at boot
+(install-package! default-package)
+
 #| ## TODO ## 
 figure out how to see the definitions provided by manage with the simple analyzer
 (define (conflicts-with-environment? package environment) ... )
 |#
 
+#| UI Stuff |#
+
+(display "Welcome to the adventure game package manager!\n")
+(display "Here's a few commands to get you started:\n")
+(display "'list-packages' : returns the names of all currently installed packages\n")
+(display "'install-package [package] [package] ...' : installs new packages onto default package\n")
+(display "'start-adventure [your-name]' : begins an adventure in a world with all currently
+           installed packages")
 
 ;;; Package Management
 
@@ -39,7 +50,8 @@ b) (use-package <name>) syntax in loadspec
 |#
 
 ;; install package
-(
+(define install-package!
+  (most-specific-generic-procedure 'install-package! 1 #f))
 
 ;;; Methods to remove from world
 
