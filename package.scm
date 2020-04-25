@@ -1,7 +1,5 @@
-;;; 6.905 Final Project                                                                                                                                                                                   
-;;; Spring 2020                                                                                                                                                                                            
-;;; Adventure World Package Manager                                                                                                                                                                       
-;;; Gretchen Eggers, Ersin Arioglu, Nick Janovetz
+;;; 6.905 Final Project                                                                             
+;;; Adventure World Package Manager                                                                 ;;; Gretchen Eggers, Ersin Arioglu, Nick Janovetz
 
 ;;; Package type definition
 (define package:map
@@ -38,17 +36,3 @@
 (define set-package-objects
   (property-setter package:objects package? package-objects?))
 
-;;; generic procedure handlers
-
-(define-generic-procedure-handler install-package!
-  (match-args package?)
-  (lambda (package)
-    (install-package! (get-package-map package))
-    (install-package! (get-package-objects package))
-    (install-package! (get-package-rules package))))
-
-|# TODO: handle uninstall package
-(define-generic-procedure-handler uninstall-package! (match-args package?)
-  <...>
-  )
-#|

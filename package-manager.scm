@@ -5,12 +5,31 @@
 
 ;;; Analysis
 
-(install-in-global!) ; to get the simple-analyzer
+;(install-in-global!) ; to get the simple-analyzer
 
 (define (extract-file-definitions filename environment)
   (let* ((file-analysis (analyze-file filename environment))
 	 (definitions-analysis (car (analysis-children file-analysis))))
     (analysis-bound definitions-analysis)))
+
+;;; Building default package
+(define (create-package-objects name objects)
+  (make-package-objects 'name name
+                        'objects objects))
+
+(define (create-package-map name places)
+  (make-package-map 'name name
+                    'places places))
+
+(define (create-package-rules name rules)
+  (make-package-rules 'name name
+                      'rules rules))
+
+(define (create-package name map objects rules)
+  (make-package 'name name
+                'map map
+                'objects objects
+                'rules rules))
 
 (define default-objects
   (create-package-objects 'default-objects
@@ -30,6 +49,40 @@
                   default-objects
                   default-rules)) 
 
+;;; generic install-package! and handlers 
+(define install-package!
+  (most-specific-generic-procedure 'install-package! 1 #f))
+
+(define-generic-procedure-handler install-package!
+  (match-args package?)
+  (lambda (package)
+    (install-package! (get-package-map package))
+    (install-package! (get-package-objects package))
+    (install-package! (get-package-rules package))))
+
+(define-generic-procedure-handler install-package!
+  (match-args package-objects?)
+  (lambda (package-objects)
+    (for-each (lambda (object)
+                (manage 'add (get-name object)))
+              (get-objects package-objects))))
+
+(define-generic-procedure-handler install-package!
+  (match-args package-map?)
+  (lambda (package-map)
+    (for-each (lambda (place)
+                (manage 'add (get-name place)))
+              (get-places package-map))))
+
+(define-generic-procedure-handler install-package!
+  (match-args package-rules?)
+  (lambda (package-rules)
+    (for-each (lambda (rule)
+                (manage 'add (get-name rule)))
+              (get-rules package-rules))))
+
+
+
 ;;; Install default package at boot
 (install-package! default-package)
 
@@ -39,13 +92,13 @@ figure out how to see the definitions provided by manage with the simple analyze
 |#
 
 #| UI Stuff |#
-
+(newline)
 (display "Welcome to the adventure game package manager!\n")
+(newline)
 (display "Here's a few commands to get you started:\n")
 (display "'list-packages' : returns the names of all currently installed packages\n")
 (display "'install-package [package] [package] ...' : installs new packages onto default package\n")
-(display "'start-adventure [your-name]' : begins an adventure in a world with all currently
-           installed packages")
+(display "'start-adventure [your-name]' : begins an adventure in a world with all currently installed packages")
 
 ;;; Package Management
 
@@ -67,27 +120,6 @@ a) analyzer (above)
 b) (use-package <name>) syntax in loadspec
 |#
 
-(define (create-package-objects name objects)
-  (make-package-objects 'name name
-                        'objects objects))
-
-(define (create-package-map name places)
-  (make-package-map 'name name
-                    'places places))
-
-(define (create-package-rules name rules)
-  (make-package-rules 'name name
-                      'rules rules))
-
-(define (create-package name map objects rules)
-  (make-package 'name name
-                'map map
-                'objects objects
-                'rules rules))
-
-;; install package
-(define install-package!
-  (most-specific-generic-procedure 'install-package! 1 #f))
 
 ;;; Methods to remove from world
 

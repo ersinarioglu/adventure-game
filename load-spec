@@ -1,10 +1,23 @@
 ;; -*-Scheme-*-
 (define-load-spec adventure-game
-  ("*" from "user-defined-types")
-  ("generic-procedures" override "common/generic-procedures")
+  ("generics" from "user-defined-types")
+  ("tagging" from "user-defined-types")
+  ("predicates" override "common/predicate-metadata")
+  ("templates" from "user-defined-types")
+  ("values" from "user-defined-types")
+  ("tags" from "user-defined-types")
+  ("functions" from "user-defined-types")
+  ("operations" override "common/operations")
+  ("arith" from "common")
+  ("numeric-arith" from "common")
+  ("generic-arith" from "generic-procedures")
+  ("standard-arith" from "user-defined-types")
+  ("vector-arith" from "user-defined-types")
   ;; put files from this directory here
   "package-substrate"
-  "package-manager"
-  "package"
   "objects"
-  "map")
+  "map"
+  "rules"
+  "package"
+  "package-manager"
+  )

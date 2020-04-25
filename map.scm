@@ -1,19 +1,16 @@
 
-;;; 6.905 Final Project                                                                                                                                                                                    
-;;; Spring 2020                                                                                                                                                                                             
-;;; Adventure World Package Manager                                                                                                                                                                         
-;;; Gretchen Eggers, Ersin Arioglu, Nick Janovetz
+;;; 6.905 Final Project                                                                             ;;; Spring 2020                                                                                     ;;; Adventure World Package Manager                                                                 ;;; Gretchen Eggers, Ersin Arioglu, Nick Janovetz
 
 ;; Map type definition
 
 (define package-map:places
   (make-property 'places
-		 'predicate (is-list-of place?)
+		 'predicate (is-list-of object?)
                  'default-value '()))
 
 (define package-map?
   (make-type 'map (list package-map:places)))
-(set-predicate<=! package-map? package?)
+(set-predicate<=! package-map? object?)
 
 (define make-package-map
   (type-instantiator package-map?))
@@ -22,11 +19,6 @@
   (property-getter package-map:places package-map?))
 
 (define add-place!
-  (property-adder pacakge-map:places package-map? place?)) 
+  (property-adder package-map:places package-map? object?)) 
 
-(define-generic-procedure-handler install-package!
-  (match-args package-map?)
-  (lambda (package-map)
-    (for-each (lambda (place)
-                (manage add (get-name place)))
-              (get-places package-map))))
+
