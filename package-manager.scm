@@ -12,6 +12,8 @@
 	 (definitions-analysis (car (analysis-children file-analysis))))
     (analysis-bound definitions-analysis)))
 
+(
+
 ;;; Install default package at boot
 (install-package! default-package)
 
@@ -48,6 +50,24 @@ Things we need to make this work
 a) analyzer (above)
 b) (use-package <name>) syntax in loadspec
 |#
+
+(define (create-package-objects name objects)
+  (make-package-objects 'name name
+                        'objects objects))
+
+(define (create-package-map name places)
+  (make-package-map 'name name
+                    'places places))
+
+(define (create-package-rules name rules)
+  (make-package-rules 'name name
+                      'rules rules))
+
+(define (create-package name map objects rules)
+  (make-package 'name name
+                'map map
+                'objects objects
+                'rules rules))
 
 ;; install package
 (define install-package!

@@ -4,8 +4,8 @@
   ("generic-procedures" override "common/generic-procedures")
   ;; put files from this directory here
   (load "package-substrate")
-  (load "package-manager")
   (load "package")
   (load "objects")
   (load "map")
+  (load "package manager")
   )
