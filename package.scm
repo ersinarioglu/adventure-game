@@ -43,7 +43,9 @@
 (define-generic-procedure-handler install-package!
   (match-args package?)
   (lambda (package)
-    (manage 'add (get-name package))))
+    (install-package! (get-package-map package))
+    (install-package! (get-package-objects package))
+    (install-package! (get-package-rules package))))
 
 |# TODO: handle uninstall package
 (define-generic-procedure-handler uninstall-package! (match-args package?)

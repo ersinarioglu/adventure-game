@@ -12,7 +12,23 @@
 	 (definitions-analysis (car (analysis-children file-analysis))))
     (analysis-bound definitions-analysis)))
 
-(
+(define default-objects
+  (create-package-objects 'default-objects
+                          '()))
+
+(define default-map
+  (create-package-map 'default-map
+                      '()))
+
+(define default-rules
+  (create-package-rules 'default-rules
+                        '()))
+
+(define default-package
+  (create-package 'defualt-package
+                  default-map
+                  default-objects
+                  default-rules)) 
 
 ;;; Install default package at boot
 (install-package! default-package)

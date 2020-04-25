@@ -24,7 +24,7 @@
   (property-adder package-objects:objects package-object? object?))
 
 (define remove-object!
-  (property-remover package:objects:objects package-object? object?))
+  (property-remover package-objects:objects package-object? object?))
 
 (define-generic-procedure-handler install-package!
   (match-args package-objects?)
