@@ -42,14 +42,15 @@
 (define set-package-objects
   (property-setter package:objects package? package-objects?))
 
-;;; generic procedure handlers?
+;;; generic procedure handlers
 
 (define-generic-procedure-handler install-package!
   (match-args package?)
   (lambda (package)
     (manage 'add (get-name package))))
 
+|# TODO: handle uninstall package
 (define-generic-procedure-handler uninstall-package! (match-args package?)
   <...>
   )
-
+#|

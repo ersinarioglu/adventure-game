@@ -39,13 +39,7 @@ b) (use-package <name>) syntax in loadspec
 |#
 
 ;; install package
-
-;; install places
-
-;; install rule
-
-;; install objects
-
+(
 
 ;;; Methods to remove from world
 
