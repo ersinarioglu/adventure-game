@@ -1,0 +1,68 @@
+Default Packages:
+[root]
+|
+|
+thing
+|
+|
+container
+|
+|
+[place, exit]
+|
+|
+mobile-thing
+|
+|
+[people. bag]
+|
+|
+autonomous-agent
+|       \     \ \___ house-master
+|        \     \
+avatar   trolls \
+                 student
+Objects:
+- lovely-trees
+- flag-pole
+- calder-sculpture
+- problem-set
+- recitation-problem
+- sicp
+- engineering-book
+
+Places:
+- great-dome
+- little-dome
+- lobby-10
+- 10-250
+- barker-library
+- lobby-7
+- infinite
+- bldg-26
+- cp32
+- tunnel
+- 32-123
+- 32G
+- 32D
+- student-street
+- great-court
+- bldg-54
+- the-dot
+- dorm-row
+
+
+Rules:
+- can-go-both-ways
+- can-see
+- can-see-both-ways
+
+People:
+- ben-bitdiddle
+- alyssa-hacker
+- course-6-frosh
+- lambda-man
+- dr-evil
+- mr-bigglesworth
+- grendel
+- registrar

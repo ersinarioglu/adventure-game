@@ -19,5 +19,6 @@
   "map"
   "rules"
   "package"
+  "packages/*" 
   "package-manager"
   )

@@ -44,7 +44,7 @@
                         '()))
 
 (define default-package
-  (create-package 'defualt-package
+  (create-package 'default-package
                   default-map
                   default-objects
                   default-rules)) 
@@ -64,6 +64,7 @@
   (match-args package-objects?)
   (lambda (package-objects)
     (for-each (lambda (object)
+                ;; check for name space problems
                 (manage 'add (get-name object)))
               (get-objects package-objects))))
 
@@ -71,6 +72,7 @@
   (match-args package-map?)
   (lambda (package-map)
     (for-each (lambda (place)
+                ;; check for name space problems
                 (manage 'add (get-name place)))
               (get-places package-map))))
 
@@ -78,6 +80,7 @@
   (match-args package-rules?)
   (lambda (package-rules)
     (for-each (lambda (rule)
+                ;; check for name space problems
                 (manage 'add (get-name rule)))
               (get-rules package-rules))))
 
