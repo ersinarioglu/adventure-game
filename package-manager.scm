@@ -5,12 +5,15 @@
 
 ;;; Analysis
 
-;(install-in-global!) ; to get the simple-analyzer
+;(define (extract-file-definitions filename environment)
+;  (let* ((file-analysis (analyze-file filename environment))
+;	 (definitions-analysis (car (analysis-children file-analysis))))
+;    (analysis-bound definitions-analysis)))
 
-(define (extract-file-definitions filename environment)
-  (let* ((file-analysis (analyze-file filename environment))
-	 (definitions-analysis (car (analysis-children file-analysis))))
-    (analysis-bound definitions-analysis)))
+(define summarize-file ; filename environment
+  (lexical-reference (manage 'manager-environment) 'summarize-file))
+
+
 
 ;;; Building default package
 
