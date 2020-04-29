@@ -13,41 +13,16 @@
     (analysis-bound definitions-analysis)))
 
 ;;; Building default package
-(define (create-package-objects name objects)
-  (make-package-objects 'name name
-                        'objects objects))
 
-(define (create-package-map name places)
-  (make-package-map 'name name
-                    'places places))
-
-(define (create-package-rules name rules)
-  (make-package-rules 'name name
-                      'rules rules))
-
-(define (create-package name map objects rules)
+(define (create-package name things-to-build children)
   (make-package 'name name
-                'map map
-                'objects objects
-                'rules rules))
-
-(define default-objects
-  (create-package-objects 'default-objects
-                          '()))
-
-(define default-map
-  (create-package-map 'default-map
-                      '()))
-
-(define default-rules
-  (create-package-rules 'default-rules
-                        '()))
+                'things-to-build things-to-build
+                'children children))
 
 (define default-package
   (create-package 'default-package
-                  default-map
-                  default-objects
-                  default-rules)) 
+                  '()
+                  (list root)))
 
 ;;; generic install-package! and handlers 
 (define install-package!
