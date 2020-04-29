@@ -14,7 +14,7 @@ container
 mobile-thing
 |
 |
-[people. bag]
+[people, bag]
 |
 |
 autonomous-agent

@@ -2,37 +2,38 @@
 ;;; Adventure World Package Manager                                                                 ;;; Gretchen Eggers, Ersin Arioglu, Nick Janovetz
 
 ;;; Package type definition
-(define package:map
-  (make-property 'map
-                 'predicate package-map?))
-(define package:rules
-  (make-property 'rules
-                 'predicate package-rules?))
-(define package:objects
-  (make-property 'objects
-                 'predicate package-objects?))
+(define package:things-to-build
+  (make-property 'things-to-build
+                 'predicate (is-list-of symbol?)
+                 'default-value '()))
+
+(define package:children
+  (make-property 'children
+                 'predicate (is-list-of object?)
+                 'default-value '()))
+
 (define package?
-  (make-type 'package (list package:map package:rules package:objects)))
+  (make-type 'package (list package:things-to-build package:children)))
 (set-predicate<=! package? object?)
 
 (define make-package
   (type-instantiator package?))
 
-(define get-package-map
-  (property-getter package:map package?))
+(define get-things-to-build
+  (property-getter package:things-to-build package?))
 
-(define set-package-map
-  (property-setter package:map package? package-map?))
+(define add-thing-to-build!
+  (property-adder package:things-to-build package? symbol?))
 
-(define get-package-rules
-  (property-getter package:rules package?))
+(define set-things-to-build!
+  (property-setter package:things-to-build package? (is-list-of symbol?)))
 
-(define set-package-rules
-  (property-setter package:rules package? package-rules?))
+(define get-children
+  (property-getter package:children package?))
 
-(define get-package-objects
-  (property-getter package:objects package?))
+(define add-child!
+  (property-adder package:children package? package?))
 
-(define set-package-objects
-  (property-setter package:objects package? package-objects?))
+(define set-children!
+  (property-setter package:children package? (is-list-of package?)))
 
