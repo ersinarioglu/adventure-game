@@ -8,13 +8,13 @@ thing
 container
 |
 |
-[place, exit]
-|
-|
-mobile-thing
-|
-|
-[people, bag]
+[place, exit] ---------------- rules ------ movement-rules ---- can-go-both-ways
+|            \                     \
+|             \                     \
+mobile-thing   stationary-thing      visibility-rules ---- can-see
+|                                                            \
+|                                                             \
+[people, bag]                                                   can-see-both-ways
 |
 |
 autonomous-agent

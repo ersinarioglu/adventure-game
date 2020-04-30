@@ -1,4 +1,13 @@
+;;; 6.905 Final Project                                                                             
+;;; Adventure World Package Manager                                                                 ;;; Gretchen Eggers, Ersin Arioglu, Nick Janovetz
 
+;;; Thing package
+(define thing
+  (create-package 'thing
+                  '()
+                  (list container)))
+
+;;; Thing type
 (define thing:location
   (make-property 'location
                  'predicate (lambda (x) (container? x))))

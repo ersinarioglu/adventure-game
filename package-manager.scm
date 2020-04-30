@@ -27,45 +27,7 @@
                   '()
                   (list root)))
 
-;;; generic install-package! and handlers 
-(define install-package!
-  (most-specific-generic-procedure 'install-package! 1 #f))
 
-(define-generic-procedure-handler install-package!
-  (match-args package?)
-  (lambda (package)
-    (install-package! (get-package-map package))
-    (install-package! (get-package-objects package))
-    (install-package! (get-package-rules package))))
-
-(define-generic-procedure-handler install-package!
-  (match-args package-objects?)
-  (lambda (package-objects)
-    (for-each (lambda (object)
-                ;; check for name space problems
-                (manage 'add (get-name object)))
-              (get-objects package-objects))))
-
-(define-generic-procedure-handler install-package!
-  (match-args package-map?)
-  (lambda (package-map)
-    (for-each (lambda (place)
-                ;; check for name space problems
-                (manage 'add (get-name place)))
-              (get-places package-map))))
-
-(define-generic-procedure-handler install-package!
-  (match-args package-rules?)
-  (lambda (package-rules)
-    (for-each (lambda (rule)
-                ;; check for name space problems
-                (manage 'add (get-name rule)))
-              (get-rules package-rules))))
-
-
-
-;;; Install default package at boot
-(install-package! default-package)
 
 #| ## TODO ## 
 figure out how to see the definitions provided by manage with the simple analyzer
