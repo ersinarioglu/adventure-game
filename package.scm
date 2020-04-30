@@ -2,7 +2,7 @@
 ;;; Package type definition
 (define package:things-to-build
   (make-property 'things-to-build
-                 'predicate (is-list-of symbol?)
+                 'predicate (is-list-of object?)
                  'default-value '()))
 
 (define package:children
@@ -21,10 +21,10 @@
   (property-getter package:things-to-build package?))
 
 (define add-thing-to-build!
-  (property-adder package:things-to-build package? symbol?))
+  (property-adder package:things-to-build package? object?))
 
 (define set-things-to-build!
-  (property-setter package:things-to-build package? (is-list-of symbol?)))
+  (property-setter package:things-to-build package? (is-list-of object?)))
 
 (define get-children
   (property-getter package:children package?))
