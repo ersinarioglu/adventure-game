@@ -45,6 +45,17 @@ figure out how to see the definitions provided by manage with the simple analyze
 
 ;;; Package Management
 
+#|
+(define (start-adventure name root-file)
+    (let game-env (make-environment (map (lambda (filename) (load “filename)) (file-to-install)) (lowlevel-start-adventure name))
+        (ge game-env)))
+
+Divide package objects into their own file - package definitions file and package object file are separate. Upon starting manager, the package object files are loaded. Upon starting an adventure, the package definitions files needed are loaded based on the package object files and their children 
+Install-package command modifies tree that specifies the definitions files that will be loaded upon start-adventure
+Start-adventure will create a new environment, load the definitions files into that environment, and switch the repl to that game environment
+
+|#
+
 ;;; Methods to examine current adventure
 ;; list packages
 
