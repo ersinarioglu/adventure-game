@@ -79,7 +79,7 @@ installs new package as a child of an exisiting package\n")
          (game-env (make-environment
 		     (map (lambda (filename) (load 'filename))
 			  (files-to-install))
-		     (lowlevel-start-adventure name)))
+		     (lowlevel-start-adventure name))))
         (ge game-env)))
 #|
 Divide package objects into their own file - package definitions file and package object file are separate. Upon starting manager, the package object files are loaded. Upon starting an adventure, the package definitions files needed are loaded based on the package object files and their children 
