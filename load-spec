@@ -19,6 +19,6 @@
   "map"
   "rules"
   "package"
-  "packages/*" 
+  "packages/objects/*" 
   "package-manager"
   )
