@@ -7,4 +7,6 @@
                   '()
                   (list 'container)))
 
+(load "adventure-game/packages/objects/container") 
+
 

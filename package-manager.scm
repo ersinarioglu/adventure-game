@@ -39,7 +39,7 @@
 		      (not (string-prefix? "." (pathname-name pn))))
 	     (directory-read (->namestring
 			      (merge-pathnames
-			       (->pathname "packages/objects/")
+			       (->pathname "packages/objects/custom/")
 			       here))))))
 
 ;;; Building default package
@@ -75,7 +75,7 @@ installs new package as a child of an exisiting package\n")
 Divide package objects into their own file - package definitions file and package object file are separate. Upon starting manager, the package object files are loaded. Upon starting an adventure, the package definitions files needed are loaded based on the package object files and their children 
 Install-package command modifies tree that specifies the definitions files that will be loaded upon start-adventure
 Start-adventure will create a new environment, load the definitions files into that environment, and switch the repl to that game environment
-|#
+
 
 (define package-tree (empty-tree))
 
@@ -116,7 +116,7 @@ Start-adventure will create a new environment, load the definitions files into t
   
 ;;; list packages must return packages in depth first order!
 (define (list-packages)
-  )
+  (
 
 (define (find-package-by-name package-name)
   (find (lambda (package)
@@ -138,3 +138,4 @@ Start-adventure will create a new environment, load the definitions files into t
 		     (lowlevel-start-adventure name))))
         (ge game-env)))
 
+|#

@@ -7,3 +7,4 @@
                   '()
                   (list 'can-go-both-ways)))
 
+(load "adventure-game/packages/objects/can-go-both-ways")

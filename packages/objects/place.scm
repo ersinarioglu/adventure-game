@@ -31,4 +31,6 @@
                         'mobile-thing
                         'stationary-thing)))
 
-
+(load "adventure-game/packages/objects/rules")
+(load "adventure-game/packages/objects/mobile-thing")
+(load "adventure-game/packages/objects/stationary-thing")
