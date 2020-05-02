@@ -26,8 +26,8 @@
 (define place
   (create-package 'place
                   all-places
-                  (list rules
-                        mobile-thing
-                        stationary-thing)))
+                  (list 'rules
+                        'mobile-thing
+                        'stationary-thing)))
 
 

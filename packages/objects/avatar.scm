@@ -4,5 +4,5 @@
 
 (define avatar
   (create-package 'avatar
-                  '(list my-name)
+                  '(list 'my-name)
                   '()))

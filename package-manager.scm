@@ -59,7 +59,8 @@ figure out how to see the definitions provided by manage with the simple analyze
 (newline)
 (display "Here's a few commands to get you started:\n")
 (display "'list-packages' : returns the names of all currently installed packages\n")
-(display "'install-package [package] [package] ...' : installs new packages onto default package\n")
+(display "'install-package [package-name] [point-of-install]' : 
+installs new package as a child of an exisiting package\n")
 (display "'start-adventure [your-name]' : begins an adventure in a world with all currently installed packages")
 
 ;;; Package Management
@@ -77,13 +78,6 @@ Start-adventure will create a new environment, load the definitions files into t
 
 ;;; Methods to examine current adventure
 ;; list packages
-
-;; list places
-
-;; list rules
-
-;; list object-types
-
 
 ;;; Methods to add to world
 

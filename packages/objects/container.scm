@@ -6,4 +6,4 @@
 (define container
   (create-package 'container
                   '()
-                  (list place)))
+                  (list 'place)))

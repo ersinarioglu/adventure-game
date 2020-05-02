@@ -7,4 +7,4 @@
 (define root
   (create-package 'root
                   '()
-                  (list thing)))
+                  (list 'thing)))

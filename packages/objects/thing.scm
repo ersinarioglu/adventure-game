@@ -5,6 +5,6 @@
 (define thing
   (create-package 'thing
                   '()
-                  (list container)))
+                  (list 'container)))
 
 
