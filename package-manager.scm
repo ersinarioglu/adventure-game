@@ -35,10 +35,12 @@
 (let ((here (directory-pathname (current-load-pathname))))
   (for-each (lambda (package-object-pathname)
 	      (load (->namestring package-object-pathname)))
-	    (directory-read (->namestring
-			     (merge-pathnames
-			      (->pathname "packages/objects/")
-			      here)))))
+	    (filter (lambda (pn)
+		      (not (string-prefix? "." (pathname-name pn))))
+	     (directory-read (->namestring
+			      (merge-pathnames
+			       (->pathname "packages/objects/")
+			       here))))))
 
 ;;; Building default package
 
@@ -74,7 +76,10 @@ installs new package as a child of an exisiting package\n")
 
 (define (start-adventure name)
   (let* ((files-to-install (list-packages))
-        (game-env (make-environment (map (lambda (filename) (load 'filename)) (files-to-install)) (lowlevel-start-adventure name)))
+         (game-env (make-environment
+		     (map (lambda (filename) (load 'filename))
+			  (files-to-install))
+		     (lowlevel-start-adventure name)))
         (ge game-env)))
 #|
 Divide package objects into their own file - package definitions file and package object file are separate. Upon starting manager, the package object files are loaded. Upon starting an adventure, the package definitions files needed are loaded based on the package object files and their children 

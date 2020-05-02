@@ -17,6 +17,11 @@
 (define make-package
   (type-instantiator package?))
 
+(define (create-package name things-to-build children)
+  (make-package 'name name
+		'things-to-build things-to-build
+		'children children))
+
 (define get-things-to-build
   (property-getter package:things-to-build package?))
 
