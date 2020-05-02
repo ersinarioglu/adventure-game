@@ -5,15 +5,33 @@
 
 ;;; Analysis
 
-;(define (extract-file-definitions filename environment)
-;  (let* ((file-analysis (analyze-file filename environment))
-;	 (definitions-analysis (car (analysis-children file-analysis))))
-;    (analysis-bound definitions-analysis)))
-
 (define summarize-file ; filename environment
   (lexical-reference (manage 'manager-environment) 'summarize-file))
 
+(define (summary-file summary) (cadr (assq 'filename summary)))
+(define (summary-free summary) (cadr (assq 'free summary)))
+(define (summary-bound summary) (cadr (assq 'bound symmary)))
 
+(define (make-by-name-index summaries)
+  (let ((index (make-strong-eq-hash-table)))
+    (for-each (lambda (summary)
+		(let ((file (summary-file summary))
+		      (bindings (summary-bound summary)))
+		  (for-each (lambda (binding)
+			      (hash-table-update!/default
+			       index
+			       binding
+			       (lambda (definers)
+				 (cons file definers))
+			       (list file))
+			      bindings))))
+	      summaries)))
+
+(define (conflicts by-name-index)
+  (filter (lambda (name-definers-pair)
+	    (> (length (cdr name-definers-pair)) 1))
+	  (hash-table->alist by-name-index)))
+		
 
 ;;; Building default package
 
