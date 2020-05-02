@@ -31,7 +31,8 @@
   (filter (lambda (name-definers-pair)
 	    (> (length (cdr name-definers-pair)) 1))
 	  (hash-table->alist by-name-index)))
-		
+
+
 
 ;;; Building default package
 
