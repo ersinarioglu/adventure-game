@@ -32,7 +32,13 @@
 	    (> (length (cdr name-definers-pair)) 1))
 	  (hash-table->alist by-name-index)))
 
-
+(let ((here (directory-pathname (current-load-pathname))))
+  (for-each (lambda (package-object-pathname)
+	      (load (->namestring package-object-pathname)))
+	    (directory-read (->namestring
+			     (merge-pathnames
+			      (->pathname "packages/objects/")
+			      here)))))
 
 ;;; Building default package
 
