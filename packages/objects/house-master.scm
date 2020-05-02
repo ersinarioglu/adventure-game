@@ -4,6 +4,7 @@
 
 (define house-master
   (create-package 'house-master
-                  (list 'dr-evil
-                        'mr-bigglesworth)
+                  (map (lambda (args) `(house-master ,args))
+		       '((dr-evil)
+			 (mr-bigglesworth)))
                   '()))

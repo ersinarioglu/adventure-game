@@ -25,7 +25,8 @@
 
 (define place
   (create-package 'place
-                  all-places
+                  (map (lambda (args) `(place (,args)))
+		       all-places)
                   (list 'rules
                         'mobile-thing
                         'stationary-thing)))

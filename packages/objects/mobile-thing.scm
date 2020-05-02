@@ -4,6 +4,6 @@
 
 (define mobile-thing
   (create-package 'mobile-thing
-                  (list 'engineering-book)
+                  '((mobile-thing (engineering-book)))
                   (list 'people)))
 

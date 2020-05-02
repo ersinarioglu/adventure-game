@@ -40,3 +40,13 @@
 (define set-children!
   (property-setter package:children package? (is-list-of package?)))
 
+(define build
+  (simple-generic-procedure 'build 2
+			    (lambda args (error "unknown object to build:" args))))
+
+(define (add-build-handler tag handler)
+  (define-generic-procedure-handler build
+    (match-args (lambda (x) (eq? tag x))
+		list?)
+    (lambda (tag args)
+      (handler args))))
