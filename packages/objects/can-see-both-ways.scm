@@ -4,7 +4,7 @@
 
 (define can-see-both-ways
   (create-package 'can-see-both-ways
-                  (list (32D 32G)
+                  (list (list '32D '32G)
                         (list 'great-dome 'little-dome)
                         (list 'lobby-10 'infinite)
                         (list 'lobby-7 'infinite)
