@@ -53,8 +53,61 @@ figure out how to see the definitions provided by manage with the simple analyze
 Divide package objects into their own file - package definitions file and package object file are separate. Upon starting manager, the package object files are loaded. Upon starting an adventure, the package definitions files needed are loaded based on the package object files and their children 
 Install-package command modifies tree that specifies the definitions files that will be loaded upon start-adventure
 Start-adventure will create a new environment, load the definitions files into that environment, and switch the repl to that game environment
-
 |#
+
+
+(define package-tree (empty-tree))
+
+(define (empty-tree)
+  '())
+
+;; Gets the root node of the tree
+(define (tree:get-root tree)
+  (car tree))
+
+;; Gets the sub trees of the tree
+(define (tree:get-sub-trees tree)
+  (cdr tree))
+
+;; Gets the child nodes of the root node of a tree
+(define (tree:get-children tree)
+  (map tree:get-root (tree:get-sub-trees tree)))
+
+;; Finds a subtree within "tree" that has root that satisfies "predicate".
+(define (tree:find-tree-with-root tree predicate)
+  (if (eq? tree (empty-tree))
+      #f
+      (if (predicate (tree:get-root tree))
+	  tree
+	  (map tree:find-tree-with-root (get-sub-trees tree)))))
+      
+
+;; Can add a node to a certain location in a tree, where node satisfies "predicate".
+(define (tree:add-child tree predicate)
+  (let ((subtree (tree:find-tree-with-root tree predicate)))
+    (append! (tree:get-children subtree) (list tree))))
+
+(define my-tree (empty-tree))
+
+
+
+
+  
+
+(define (list-packages)
+  "list packages")
+
+(define (find-package-by-name package-name)
+  (find (lambda (package)
+	  (eq? (get-name package) package-name)) (list-packages)))
+
+(define (install-package! package-name)
+  (let ((package (find-package-by-name package-name)))
+    (
+
+(define (load-
+
+
 
 ;;; Methods to examine current adventure
 ;; list packages
