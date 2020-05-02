@@ -28,3 +28,11 @@
               (suffer! (random-number 3) victim))))))
 
 (define-clock-handler troll? eat-people!)
+
+;;; Handler for build method
+(define (create-troll name)
+  (make-troll 'name name
+              'location (random-choid all-places)
+              'restlessness (random-bias 3)
+              'acquisitiveness 1/10
+              'hunger (random-bias 3)))

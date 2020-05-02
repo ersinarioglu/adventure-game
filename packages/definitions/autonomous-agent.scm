@@ -55,3 +55,5 @@
         (take-thing! thing agent))))
 
 (define-clock-handler autonomous-agent? move-and-take-stuff!)
+
+;;; Use default build handler, nothing to build, just read in file

@@ -21,3 +21,5 @@
 
 (define remove-thing!
   (property-remover container:things container? thing?))
+
+;;; Use default build handler, nothing to build (just read in file)

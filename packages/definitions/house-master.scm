@@ -40,3 +40,12 @@ define (irritate-students! master)
                   '("I'll let you off this once..."))))))
 
 (define-clock-handler house-master? irritate-students!)
+
+;;; Handler for build method
+
+(define (create-house-master name)
+  (make-house-master 'name name
+                     'location (random-choice all-places)
+                     'restlessness (random-bias 3)
+                     'acquisitiveness 1/10
+                     'irritability (random-bias 3)))

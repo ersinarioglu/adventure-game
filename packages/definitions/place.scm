@@ -99,3 +99,13 @@
 
 
 
+;;; Handler for build method
+(define (create-place name)
+  (make-place 'name name))
+
+;;; this will be used by children packages
+(define (create-exit from direction to)
+  (make-exit 'name 'exit
+             'from from
+             'direction direction
+             'to to))

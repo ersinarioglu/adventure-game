@@ -33,4 +33,7 @@
     #f))
 
 
-
+;;; Handler for build method
+(define (create-thing name location)
+  (make-thing 'name name
+              'location location))

@@ -28,3 +28,8 @@
 (define leave-place!
   (most-specific-generic-procedure 'leave-place! 1
     (constant-generic-procedure-handler #f)))
+
+;;; Handler for build method
+(define (create-mobile-thing name location)
+  (make-mobile-thing 'name name
+                     'location location))

@@ -52,3 +52,9 @@
                '("There are no exits..."
                  "you are dead and gone to heaven!")))
          avatar))
+
+;;; handler for build method
+(define (create-avatar name place)
+  (make-avatar 'name name
+               'location place
+               'screen (make-screen 'name 'the-screen)))
