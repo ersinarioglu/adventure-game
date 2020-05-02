@@ -15,8 +15,6 @@
   ("vector-arith" from "user-defined-types")
   ;; put files from this directory here
   "package-substrate"
-  "map"
-  "rules"
   "package"
   "packages/objects/*" 
   "package-manager"
