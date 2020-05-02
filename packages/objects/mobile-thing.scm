@@ -7,3 +7,5 @@
                   (list 'engineering-book)
                   (list 'people)))
 
+(load "adventure-game/packages/objects/people")
+

@@ -7,3 +7,5 @@
   (create-package 'container
                   '()
                   (list 'place)))
+
+(load "adventure-game/packages/objects/place")
