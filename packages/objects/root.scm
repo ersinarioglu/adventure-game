@@ -8,3 +8,5 @@
   (create-package 'root
                   '()
                   (list 'thing)))
+
+(load "adventure-game/packages/objects/thing") 

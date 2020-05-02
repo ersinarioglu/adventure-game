@@ -7,3 +7,7 @@
                   '()
                   (list 'avatar 'troll 'student 'house-master)))
 
+(load "adventure-game/packages/objects/avatar")
+(load "adventure-game/packages/objects/troll")
+(load "adventure-game/packages/objects/student")
+(load "adventure-game/packages/objects/house-master")

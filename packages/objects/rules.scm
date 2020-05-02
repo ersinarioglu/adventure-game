@@ -7,3 +7,6 @@
                   '()
                   (list 'movement-rules
                         'visibility-rules)))
+
+(load "adventure-game/packages/objects/movement-rules")
+(load "adventure-game/packages/objects/visibility-rules")

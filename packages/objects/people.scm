@@ -7,7 +7,6 @@
                   '()
                   (list 'autonomous-agent)))
 
-
-
+(load "adventure-game/packages/objects/autonomous-agent")
 
 

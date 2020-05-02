@@ -13,3 +13,5 @@
                         (list 'lobby-10 'great-court)
                         (list 'great-dome 'great-court))
                   (list 'can-see-both-ways)))
+
+(load "adventure-game/packages/objects/can-see-both-ways")

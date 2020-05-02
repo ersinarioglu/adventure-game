@@ -16,6 +16,6 @@
   ;; put files from this directory here
   "package-substrate"
   "package"
-  "packages/objects/*" 
+  "packages/objects/root"
   "package-manager"
   )

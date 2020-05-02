@@ -7,3 +7,5 @@
                   '()
                   (list 'can-see)))
                         
+(load "adventure-game/packages/objects/can-see")
+
