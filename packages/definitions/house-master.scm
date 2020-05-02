@@ -17,7 +17,7 @@
 (define get-irritability
   (property-getter house-master:irritability house-master?))
 
-define (irritate-students! master)
+(define (irritate-students! master)
   (let ((students (filter student? (people-here master))))
     (if (flip-coin (get-irritability master))
         (if (n:pair? students)
