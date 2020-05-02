@@ -4,6 +4,6 @@
 
 (define house-master
   (create-package 'house-master
-                  (list dr-evil
-                        mr-bigglesworth)
+                  (list 'dr-evil
+                        'mr-bigglesworth)
                   '()))

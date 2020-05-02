@@ -5,5 +5,5 @@
 (define movement-rules
   (create-package 'movement-rules
                   '()
-                  (list can-go-both-ways)))
+                  (list 'can-go-both-ways)))
 
