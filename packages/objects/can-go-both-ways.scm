@@ -6,7 +6,7 @@
   (create-package 'can-go-both-ways
                   (list (list 'lobby-10 'up 'down '10-250)
                         (list '10-250 'up 'down 'barker-library)
-                        (list 'barker-library 'up 'down great-dome)
+                        (list 'barker-library 'up 'down 'great-dome)
                         (list 'lobby-10 'west 'east 'lobby-7)
                         (list 'lobby-7 'west 'east 'dorm-row)
                         (list 'lobby-7 'up 'down 'little-dome)
