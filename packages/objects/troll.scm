@@ -4,7 +4,7 @@
 
 (define troll
   (create-package 'troll
-                  (map (lambda (args) `(troll (,args)))
+                  (map (lambda (args) `(troll ,args))
 		       '(grendel
                         'registrar))
                   '()))

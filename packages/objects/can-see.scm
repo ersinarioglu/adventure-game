@@ -4,7 +4,7 @@
 
 (define can-see
   (create-package 'can-see
-                  (map (lambda (args) `(can-see ,args))
+                  (map (lambda (args) `(can-see ,@args))
 		       '((bldg-54 32G)
                          (bldg-54 32D)
                          (bldg-54 great-dome)

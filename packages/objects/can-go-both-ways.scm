@@ -4,7 +4,7 @@
 
 (define can-go-both-ways
   (create-package 'can-go-both-ways
-                  (map (lambda (args) `(both-ways ,args))
+                  (map (lambda (args) `(both-ways ,@args))
 		       '((lobby-10 up down 10-250)
 			 (10-250 up down barker-library)
 			 (barker-library up down great-dome)

@@ -4,5 +4,5 @@
 
 (define avatar
   (create-package 'avatar
-                  '(avatar (my-name))
+                  '(avatar my-name)
                   '()))

@@ -4,7 +4,7 @@
 
 (define can-see-both-ways
   (create-package 'can-see-both-ways
-                  (map (lambda (args) `(can-see-both-ways ,args))
+                  (map (lambda (args) `(can-see-both-ways ,@args))
 		       '((32D 32G)
                          (great-dome little-dome)
                          (lobby-10 infinite)

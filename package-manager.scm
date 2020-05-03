@@ -61,22 +61,21 @@
                   '()
                   (list root)))
 
-
 (define build
-  (simple-generic-procedure 'build 2
+  (simple-generic-procedure 'build 1
 			    (lambda args (error "unknown object to build:" args))))
+
+(define (tagged-list? tag)
+  (lambda (x)
+    (and (list? x)
+	 (> (length x) 0)
+	 (eq? tag (first x)))))
 
 (define (add-build-handler tag handler)
   (define-generic-procedure-handler build
-    (match-args (lambda (x) (eq? tag x))
-		list?)
-    (lambda (tag args)
-      (apply handler args))))
-
-#| ## TODO ## 
-figure out how to see the definitions provided by manage with the simple analyzer
-(define (conflicts-with-environment? package environment) ... )
-|#
+    (match-args (tagged-list? tag))
+    (lambda (lst)
+      (apply handler (cdr lst)))))
 
 #| UI Stuff |#
 (newline)
@@ -113,9 +112,6 @@ Start-adventure will create a new environment, load the definitions files into t
 (define (tree:get-children tree)
   (map tree:get-root (tree:get-sub-trees tree)))
 
-
-
-
 ;; Finds a subtree within "tree" that has root that satisfies "predicate".
 (define (tree:find-tree-with-root tree predicate)
   (define result #f)
@@ -129,8 +125,6 @@ Start-adventure will create a new environment, load the definitions files into t
   (find-tree-with-root-helper tree)
   result)
 
-
-
 (define my-tree (list 'world (list 'france
 				   (list 'paris (list)))
 		      (list 'spain
@@ -140,12 +134,6 @@ Start-adventure will create a new environment, load the definitions files into t
 			   (list 'ankara (list)))))
 
 (tree:find-tree-with-root my-tree (lambda (x) (eq? x 'france)))
-
-  
-
-
-
-
   
 ;;; list packages must return packages in depth first order!
 (define (list-packages)
@@ -164,7 +152,6 @@ Start-adventure will create a new environment, load the definitions files into t
 
 (define build-people
   ())
-
 
 (define clock)
 (define all-places)
