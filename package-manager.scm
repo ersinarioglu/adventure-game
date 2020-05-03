@@ -3,12 +3,22 @@
 ;;; Adventure World Package Manager
 ;;; Gretchen Eggers, Ersin Arioglu, Nick Janovetz
 
-;;; Analysis
+;;; UI ANNOUNCEMENT
 
-;(define (extract-file-definitions filename environment)
-;  (let* ((file-analysis (analyze-file filename environment))
-;	 (definitions-analysis (car (analysis-children file-analysis))))
-;    (analysis-bound definitions-analysis)))
+(newline)
+(display "Welcome to the adventure game package manager!\n")
+(newline)
+(display "Here's a few commands to get you started:\n")
+(display "'list-packages' : returns the names of all currently installed packages\n")
+(display "'install-package [package] [package] ...' : installs new packages onto default package\n")
+(display "'start-adventure [your-name]' : begins an adventure in a world with all currently installed packages")
+
+#|
+Divide package objects into their own file - package definitions file and package object file are separate. Upon starting manager, the package object files are loaded. Upon starting an adventure, the package definitions files needed are loaded based on the package object files and their children 
+Install-package command modifies tree that specifies the definitions files that will be loaded upon start-adventure
+Start-adventure will create a new environment, load the definitions files into that environment, and switch the repl to that game environment |#
+
+;;; ANALYSIS
 
 (define summarize-file ; filename environment
   (lexical-reference (manage 'manager-environment) 'summarize-file))
@@ -61,6 +71,9 @@
                   '()
                   (list root)))
 
+
+;;; BUILD
+
 (define build
   (simple-generic-procedure 'build 1
 			    (lambda args (error "unknown object to build:" args))))
@@ -77,20 +90,17 @@
     (lambda (lst)
       (apply handler (cdr lst)))))
 
-#| UI Stuff |#
-(newline)
-(display "Welcome to the adventure game package manager!\n")
-(newline)
-(display "Here's a few commands to get you started:\n")
-(display "'list-packages' : returns the names of all currently installed packages\n")
-(display "'install-package [package] [package] ...' : installs new packages onto default package\n")
-(display "'start-adventure [your-name]' : begins an adventure in a world with all currently installed packages")
+(define (build-package package)
+  (let ((things-to-build (get-things-to-build package))
+	(children (get-children package)))
+    (append (map build things-to-build)
+	    (reduce-left append '() (map build children)))))
 
-#|
-Divide package objects into their own file - package definitions file and package object file are separate. Upon starting manager, the package object files are loaded. Upon starting an adventure, the package definitions files needed are loaded based on the package object files and their children 
-Install-package command modifies tree that specifies the definitions files that will be loaded upon start-adventure
-Start-adventure will create a new environment, load the definitions files into that environment, and switch the repl to that game environment |#
+(define-generic-procedure-handler build
+  (match-args package?)
+  build-package)
 
+;;; PACKAGE TREE
 
 (define package-tree (empty-tree))
 
@@ -146,6 +156,13 @@ Start-adventure will create a new environment, load the definitions files into t
 (define (install-package! package-name)
   (let ((package (find-package-by-name package-name)))
     ()))
+
+;;; GAME STATE
+
+#|
+use environment-define to assign values built by 
+build to symbols in the game environment
+|#
 
 (define build-game
   ())
