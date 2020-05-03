@@ -8,3 +8,6 @@
 		       '((dr-evil)
 			 (mr-bigglesworth)))
                   '()))
+
+(add-child! autonomous-agent house-master)
+(append! all-packages (list housemaster))

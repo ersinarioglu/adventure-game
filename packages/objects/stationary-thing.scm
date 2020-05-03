@@ -10,3 +10,6 @@
                          (flag-pole great-court)
                          (calder-sculpture the-dot)))
                   '()))
+
+(add-child! place stationary-thing)
+(append! all-packages stationary-thing)
