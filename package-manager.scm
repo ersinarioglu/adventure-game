@@ -92,8 +92,10 @@ Start-adventure will create a new environment, load the definitions files into t
 
 (define (build-package package)
   (let ((things-to-build (get-things-to-build package))
-	(children (get-children package)))
-    (append (map build things-to-build)
+	(children (get-children package))
+	(build-method (get-build-method package))
+	(environment (the-environment)))
+    (append (build-method-package things-to-build environment)
 	    (reduce-left append '() (map build children)))))
 
 (define-generic-procedure-handler build
@@ -189,10 +191,14 @@ build to symbols in the game environment
         
          
 (define (start-adventure name)
-  (let* ((files-to-install (list-packages))
+  (let* ((packages (list-packages))
          (game-env (make-environment
-		     (map (lambda (filename) (load 'filename))
-			  (files-to-install))
+		     (map (lambda (package)
+			    (load (string-append
+				   "packages/objects/"
+				   (symbol->string (get-name package))))
+			  packages)
+		     (build (tree:get-root package-tree))
 		     (lowlevel-start-adventure name))))
         (ge game-env)))
 
