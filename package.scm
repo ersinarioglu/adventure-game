@@ -1,4 +1,6 @@
 
+(define loaded-packages '())
+
 ;;; Package type definition
 (define package:things-to-build
   (make-property 'things-to-build
@@ -13,7 +15,7 @@
 (define package:build-method
   (make-property 'build-method
 		 'predicate procedure?
-		 'default-value (lambda (things-to-build environment)
+		 'default-value (lambda (things-to-build symbol-definer)
 				  (map build things-to-build))))
 
 (define package?
@@ -26,14 +28,17 @@
   (type-instantiator package?))
 
 (define (create-package name things-to-build children #!optional build-method)
-  (if (default-object? build-method)
-      (make-package 'name name
-		    'things-to-build things-to-build
-		    'children children)
-      (make-package 'name name
-		    'things-to-build things-to-build
-		    'children children
-		    'build-method build-method)))
+  (let ((created-package
+	 (if (default-object? build-method)
+	     (make-package 'name name
+			   'things-to-build things-to-build
+			   'children children)
+	     (make-package 'name name
+			   'things-to-build things-to-build
+			   'children children
+			   'build-method build-method))))
+    (set! loaded-packages (cons created-package loaded-packages))
+    created-package))
 
 (define get-things-to-build
   (property-getter package:things-to-build package?))
