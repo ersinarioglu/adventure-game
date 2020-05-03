@@ -43,12 +43,11 @@
 
 ;;; Handler for build method
 
-(define (create-house-master args)
-  (let ((name (first args)))
-    (make-house-master 'name name
-		       'location (random-choice all-places)
-		       'restlessness (random-bias 3)
-		       'acquisitiveness 1/10
-                       'irritability (random-bias 3))))
+(define (create-house-master name)
+  (make-house-master 'name name
+		     'location (random-choice all-places)
+		     'restlessness (random-bias 3)
+		     'acquisitiveness 1/10
+		     'irritability (random-bias 3)))
 
 (add-build-handler 'house-master create-house-master)

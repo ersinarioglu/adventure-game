@@ -107,13 +107,10 @@
 (add-build-handler 'place create-place)
 
 ;;; this will be used by children packages
-(define (create-exit args)
-  (let ((from (first args))
-	(direction (second args))
-	(to (third args)))
-    (make-exit 'name 'exit
-	       'from from
-	       'direction direction
-	       'to to)))
+(define (create-exit from direction to)
+  (make-exit 'name 'exit
+	     'from from
+	     'direction direction
+	     'to to))
 
 (add build-handler 'exit create-exit)
