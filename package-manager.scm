@@ -200,11 +200,30 @@
 		      (list 'turkey
 			    (list 'ankara))))
 
+(define (longest-path-to-leaves-hash node-in)
+  (let ((hash (make-strong-eq-hash-table)))
+    (let longest-depth ((node node-in))
+      (hash-table/lookup
+       node
+       (lambda () hash-table-ref hash node)
+       (lambda ()
+	 (let ((children (get-children node)))
+	   (if (null? children)
+	       (hash-table-set! hash node 0)
+	       (hash-table-set!
+		hash node (+ 1 (apply max
+				      (map longest-depth
+					   children)))))))))
+    hash))
 
-  
-;;; list packages must return packages in depth first order!
+; returns packages in load order, ie sorted by the depends relation
 (define (list-packages)
-  ())
+  (map car
+       (sort (hash-table->alist
+	      (longest-path-to-leaves-hash
+	       (tree:get-root package-tree)))
+	     (lambda (p1 p2)
+	       (> (cdr p1) (cdr p2))))))
 
 (define (find-package-by-name package-name)
   (find (lambda (package)
@@ -228,22 +247,6 @@
 use environment-define to assign values built by 
 build to symbols in the game environment
 |#
-
-(define clock)
-(define all-places)
-(define heaven)
-(define all-people)
-(define my-avatar)
-
-(define (lowlevel-start-adventure name)
-  (set! clock (make-clock))
-  (set! all-places (build-game))
-  (set! heaven (create-place 'heaven))
-  (set! all-people (build-people all-places))
-  (set! my-avatar
-        (create-avatar name
-                       (random-choice all-places)))
-  (whats-here))
         
 (define (start-adventure name)
   (let* ((packages (list-packages))
