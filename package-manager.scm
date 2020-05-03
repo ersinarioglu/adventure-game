@@ -298,17 +298,17 @@ build to symbols in the game environment
 (define (local-possessive person)
   (if (eqv? person my-avatar)
       "Your"
-      (possessive person))
+      (possessive person)))
 
 
 
 ;;; UI ANNOUNCEMENT
 
 (newline)
-(write-line "Welcome to the adventure game package manager!\n")
-(write-line "Here's a few commands to get you started:\n")
-(write-line  "---------------------------------------------------------------")
-(write-line  "'list-packages' : returns the names of all currently installed packages\n")
-(write-line  "'install-package! [parent-package] [new-package]' : \ninstalls new packages as children of parent package\n")
-(write-line "'uninstall-package! [package]' : \nuninstalls package and all of the package's children, if it exists and is currently installed\n") 
-(write-line "'start-adventure [your-name]' : begins an adventure in a world with all currently installed packages")
+(display "Welcome to the adventure game package manager!\n")
+(display "Here's a few commands to get you started:\n\n")
+(display  "---------------------------------------------------------------\n\n")
+(display  "'list-packages' : returns the names of all currently installed packages\n\n")
+(display  "'install-package! [parent-package] [new-package]' : \ninstalls new packages as children of parent package\n\n")
+(display "'uninstall-package! [package]' : \nuninstalls package and all of the package's children, if it exists and is currently installed\n\n") 
+(display "'start-adventure [your-name]' : begins an adventure in a world with all currently installed packages")
