@@ -3,7 +3,6 @@
 ;;; Adventure World Package Manager
 ;;; Gretchen Eggers, Ersin Arioglu, Nick Janovetz
 
-
 #|
 Divide package objects into their own file - package definitions file and package object file are separate. Upon starting manager, the package object files are loaded. Upon starting an adventure, the package definitions files needed are loaded based on the package object files and their children 
 Install-package command modifies tree that specifies the definitions files that will be loaded upon start-adventure
@@ -81,17 +80,12 @@ Start-adventure will create a new environment, load the definitions files into t
     (lambda (lst)
       (apply handler (cdr lst)))))
 
-(define (build-package package)
+(define (build-package package environment)
   (let ((things-to-build (get-things-to-build package))
 	(children (get-children package))
-	(build-method (get-build-method package))
-	(environment (the-environment)))
+	(build-method (get-build-method package)))
     (append (build-method-package things-to-build environment)
-	    (reduce-left append '() (map build children)))))
-
-(define-generic-procedure-handler build
-  (match-args package?)
-  build-package)
+	    (reduce-left append '() (map build-package children)))))
 
 ;;; PACKAGE TREE
 
@@ -156,7 +150,8 @@ Start-adventure will create a new environment, load the definitions files into t
           (else (display "\nNeither of those packages exist."))
           )))
 
-(define (uninstall-package! package-name) () ) 
+(define (uninstall-package! package-name) () )
+
 ;;; GAME STATE
 
 #|
@@ -194,10 +189,11 @@ build to symbols in the game environment
 			    (load (string-append
 				   "packages/objects/"
 				   (symbol->string (get-name package))))
-			  packages)
-		     (build (tree:get-root package-tree))
-		     (lowlevel-start-adventure name))))
-         (ge game-env))))
+			    packages)))))
+    (build-package (tree:get-root package-tree) game-env)
+    (ge game-env)
+    (lowlevel-start-adventure name)))
+
 
 (define (get-all-places)
   all-places)
@@ -302,21 +298,17 @@ build to symbols in the game environment
 (define (local-possessive person)
   (if (eqv? person my-avatar)
       "Your"
-      (possessive person)))
+      (possessive person))
+
+
 
 ;;; UI ANNOUNCEMENT
 
 (newline)
-(display "Welcome to the adventure game package manager!\n")
-(newline)
-(display "Here's a few commands to get you started:\n")
-(newline)
-(display "---------------------------------------------------------------")
-(newline)
-(display "'list-packages' : returns the names of all currently installed packages\n")
-(newline)
-(display "'install-package! [parent-package] [new-package]' : \ninstalls new packages as children of parent package\n")
-(newline)
-(display "'uninstall-package! [package]' : \nuninstalls package and all of the package's children, if it exists and is currently installed\n") 
-(newline)
-(display "'start-adventure [your-name]' : begins an adventure in a world with all currently installed packages")
+(write-line "Welcome to the adventure game package manager!\n")
+(write-line "Here's a few commands to get you started:\n")
+(write-line  "---------------------------------------------------------------")
+(write-line  "'list-packages' : returns the names of all currently installed packages\n")
+(write-line  "'install-package! [parent-package] [new-package]' : \ninstalls new packages as children of parent package\n")
+(write-line "'uninstall-package! [package]' : \nuninstalls package and all of the package's children, if it exists and is currently installed\n") 
+(write-line "'start-adventure [your-name]' : begins an adventure in a world with all currently installed packages")
