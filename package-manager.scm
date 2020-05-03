@@ -3,15 +3,6 @@
 ;;; Adventure World Package Manager
 ;;; Gretchen Eggers, Ersin Arioglu, Nick Janovetz
 
-;;; UI ANNOUNCEMENT
-
-(newline)
-(display "Welcome to the adventure game package manager!\n")
-(newline)
-(display "Here's a few commands to get you started:\n")
-(display "'list-packages' : returns the names of all currently installed packages\n")
-(display "'install-package [package] [package] ...' : installs new packages onto default package\n")
-(display "'start-adventure [your-name]' : begins an adventure in a world with all currently installed packages")
 
 #|
 Divide package objects into their own file - package definitions file and package object file are separate. Upon starting manager, the package object files are loaded. Upon starting an adventure, the package definitions files needed are loaded based on the package object files and their children 
@@ -156,7 +147,12 @@ Start-adventure will create a new environment, load the definitions files into t
 (define (install-package! point-of-install new-package)
   (let ((parent (find-package-by-name point-of-install))
         (child (find-package-by-name new-package)))
-   (if parent (add-child! parent child))))
+    (cond ((and parent child) (add-child! parent child)
+                  (display "\nInstallation successful."))
+          ((and parent (not child)) (display "\nOops, the package you're trying to install doesn't exist."))
+          ((and (not parent) child) (display "\nOops, the point of installation doesn't exist- try listing the packages to see which packages are currently installed."))
+          (else (display "Neither of those packages exist."))
+          )))
 
 (define (uninstall-package! package-name) () ) 
 ;;; GAME STATE
@@ -197,3 +193,20 @@ build to symbols in the game environment
 		     (lowlevel-start-adventure name))))
         (ge game-env)))
 
+
+;;; UI ANNOUNCEMENT
+
+(newline)
+(display "Welcome to the adventure game package manager!\n")
+(newline)
+(display "Here's a few commands to get you started:\n")
+(newline)
+(display "---------------------------------------------------------------")
+(newline)
+(display "'list-packages' : returns the names of all currently installed packages\n")
+(newline)
+(display "'install-package! [parent-package] [new-package]' : \ninstalls new packages as children of parent package\n")
+(newline)
+(display "'uninstall-package! [package]' : \nuninstalls package and all of the package's children, if it exists and is currently installed\n") 
+(newline)
+(display "'start-adventure [your-name]' : begins an adventure in a world with all currently installed packages")
