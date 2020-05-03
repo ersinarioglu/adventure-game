@@ -3,11 +3,6 @@
 ;;; Adventure World Package Manager
 ;;; Gretchen Eggers, Ersin Arioglu, Nick Janovetz
 
-#|
-Divide package objects into their own file - package definitions file and package object file are separate. Upon starting manager, the package object files are loaded. Upon starting an adventure, the package definitions files needed are loaded based on the package object files and their children 
-Install-package command modifies tree that specifies the definitions files that will be loaded upon start-adventure
-Start-adventure will create a new environment, load the definitions files into that environment, and switch the repl to that game environment |#
-
 ;;; ANALYSIS
 
 (define summarize-file ; filename environment
@@ -80,16 +75,15 @@ Start-adventure will create a new environment, load the definitions files into t
     (lambda (lst)
       (apply handler (cdr lst)))))
 
-
-
-
-(define (build-package package environment)
+(define (build-package package symbol-definer)
   (let ((things-to-build (get-things-to-build package))
 	(children (get-children package))
 	(build-method (get-build-method package)))
-    (append (build-method-package things-to-build environment)
-	    (reduce-left append '() (map build-package children)))))
-
+    (append (build-method-package things-to-build symbol-definer)
+	    (reduce-left append '()
+			 (map (lambda (child)
+				(build-package child symbol-definer))
+			      children)))))
 
 
 ;;; THESE DEFINE A TREE DATA TYPE
@@ -240,12 +234,6 @@ use environment-define to assign values built by
 build to symbols in the game environment
 |#
 
-(define build-game
-  ())
-
-(define build-people
-  ())
-
 (define clock)
 (define all-places)
 (define heaven)
@@ -262,126 +250,28 @@ build to symbols in the game environment
                        (random-choice all-places)))
   (whats-here))
         
-         
 (define (start-adventure name)
   (let* ((packages (list-packages))
-         (game-env (make-environment
-		     (map (lambda (package)
-			    (load (string-append
-				   "packages/objects/"
-				   (symbol->string (get-name package))))
-			    packages)))))
-    (build-package (tree:get-root package-tree) game-env)
+	 (calling-env (nearest-repl/environment))
+         (game-env (extend-top-level-environment calling-env)))
+    (define (symbol-definer name value)
+      (environment-define game-env name value))
+    (symbol-definer 'retire-game (lambda ()
+				   (write-line "farewell!")
+				   (ge calling-env)))
+    (for-each (lambda (package)
+		(load (string-append "packages/objects/"
+				     (symbol->string (get-name package)))
+		      game-env))
+	      packages)
+    (symbol-definer 'clock (make-clock))
+    (symbol-definer 'heaven (build '(place heaven)))
+    (let ((objects (build-package (tree:get-root package-tree) symbol-definer)))
+      (symbol-definer 'all-people (filter person? objects))
+      (symbol-definer 'my-avatar (build `(avatar ,name))))
+    (load "adventure-game-ui" game-env)
     (ge game-env)
-    (lowlevel-start-adventure name)))
-
-
-(define (get-all-places)
-  all-places)
-
-(define (get-heaven)
-  heaven)
-
-(define (get-clock)
-  the-clock)
-
-;;; Game UI functions
-
-(define (go direction)
-  (let ((exit
-         (find-exit-in-direction direction
-                                 (get-location my-avatar))))
-    (if exit
-        (take-exit! exit my-avatar)
-        (narrate! (list "No exit in" direction "direction")
-                  my-avatar)))
-  'done)
-
-(define (take-thing name)
-  (let ((thing (find-thing name (here))))
-    (if thing
-        (take-thing! thing my-avatar)))
-  'done)
-
-(define (drop-thing name)
-  (let ((thing (find-thing name my-avatar)))
-    (if thing
-        (drop-thing! thing my-avatar)))
-'done)
-
-(define (look-in-bag #!optional person-name)
-  (let ((person
-         (if (default-object? person-name)
-             my-avatar
-             (find-person person-name))))
-    (if person
-        (tell! (let ((referent (local-possessive person))
-                     (things (get-things person)))
-                 (if (n:pair? things)
-                     (cons* referent "bag contains" things)
-                     (list referent "bag is empty")))
-               my-avatar)))
-  'done)
-
-(define (whats-here)
-  (look-around my-avatar)
-  'done)
-
-(define (say . message)
-  (say! my-avatar message)
-  'done)
-
-(define (tell person-name . message)
-  (tell! message (find-person person-name))
-  'done)
-
-(define (hang-out ticks)
-  (do ((i 0 (n:+ i 1)))
-      ((not (n:< i ticks)))
-    (tick! (get-clock)))
-  'done)
-
-;;; Game UI support
-
-(define (here)
-  (get-location my-avatar))
-
-(define (find-person name)
-  (let ((person
-         (find-object-by-name name (people-here my-avatar))))
-    (if (not person)
-        (tell! (list "There is no one called" name "here")
-               my-avatar))
-    person))
-
-(define (find-thing name person-or-place)
-  (let ((thing
-         (find-object-by-name
-          name
-          (person-or-place-things person-or-place))))
-    (if (not thing)
-        (tell! (cons* "There is nothing called"
-                      name
-                      (person-or-place-name person-or-place))
-               my-avatar))
-    thing))
-
-(define (person-or-place-things person-or-place)
-  (if (place? person-or-place)
-      (all-things-in-place person-or-place)
-      (get-things person-or-place)))
-
-(define (person-or-place-name person-or-place)
-  (if (place? person-or-place)
-      '("here")
-      (list "in" (local-possessive person-or-place) "bag")))
-
-(define (local-possessive person)
-  (if (eqv? person my-avatar)
-      "Your"
-      (possessive person)))
-
-
+    (whats-here)))
 
 ;;; UI ANNOUNCEMENT
 
