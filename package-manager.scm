@@ -16,7 +16,7 @@ Start-adventure will create a new environment, load the definitions files into t
 
 (define (summary-file summary) (cadr (assq 'filename summary)))
 (define (summary-free summary) (cadr (assq 'free summary)))
-(define (summary-bound summary) (cadr (assq 'bound symmary)))
+(define (summary-bound summary) (cadr (assq 'bound summary)))
 
 (define (make-by-name-index summaries)
   (let ((index (make-strong-eq-hash-table)))
