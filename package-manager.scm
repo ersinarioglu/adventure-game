@@ -82,14 +82,15 @@ Divide package objects into their own file - package definitions file and packag
 Install-package command modifies tree that specifies the definitions files that will be loaded upon start-adventure
 Start-adventure will create a new environment, load the definitions files into that environment, and switch the repl to that game environment |#
 
+;;; THESE DEFINE A TREE DATA TYPE
 
 (define package-tree (empty-tree))
 
 (define (empty-tree)
-  '())
+  (list))
 
-(define (beginner-tree)
-  (cons 'root '()))
+(define (new-tree-with-root name)
+  (list name))
 
 ;; Gets the value of the root node in the tree.
 (define (tree:get-root tree)
@@ -102,7 +103,6 @@ Start-adventure will create a new environment, load the definitions files into t
 ;; Gets the child nodes of the root node of a tree
 (define (tree:get-children tree)
   (map tree:get-root (tree:get-sub-trees tree)))
-
 
 
 
@@ -120,20 +120,88 @@ Start-adventure will create a new environment, load the definitions files into t
   result)
 
 
+;; Adds given "new-tree" under node in "tree" that satisfies "predicate".
+(define (tree:add-tree-to-place! tree predicate new-tree)
+  (let ((sub-tree (tree:find-tree-with-root tree predicate)))
+    (if subtree
+	(append! sub-tree (list new-tree))
+	#f)))
 
-(define my-tree (list 'world (list 'france
-				   (list 'paris (list)))
-		      (list 'spain
-			    (list 'madrid (list)))
-			    
-		      (list 'turkey
-			   (list 'ankara (list)))))
+;; Adds given "object" as a node under a node that satisfies "predicate" in "tree"
+(define (tree:add-object-to-place! tree predicate object)
+  (tree:add-tree-to-place! tree predicate (list object)))
 
-(tree:find-tree-with-root my-tree (lambda (x) (eq? x 'france)))
+
+;;; NOW WE ADD UTILITIES FOR PACKAGES:
+
+;; Finds package in list of "packages" that has "name"
+(define (find-package-in-list packages name)
+  (find (lambda (package)
+	  (eq? name (get-name package))) packages))
+
+(define (find-root-package packages)
+  (find-package-in-list packages 'root))
+
+;; Finds subtree in "tree" that has root package that has name "package-name"
+(define (get-subtree-with-root-package tree package-name)
+  (tree:find-tree-with-root tree (lambda (package)
+				   (eq? (get-name package) package-name))))
+
+(define (add-object-to-subtree-with-root-package! tree root-package-name
+					   object)
+  (tree:add-object-to-place! tree (lambda (package)
+				    (eq? (get-name package) root-package-name))
+			     object))
+
+(define (add-list-of-packages-to-subtree! tree root-package-name objects)
+  (define (helper object)
+    (add-object-to-subtree-with-root-package! tree root-package-name object))
+  (map helper objects))
+	 
+;; packages is a list of packages
+
+(define (make-tree-from-packages packages)
+  (define my-tree (list (get-root-package packages)))
+
+  ;; Adds the children of a given "package" to "tree" if "package" is in "tree"
+  (define (populate-children tree package)
+    (add-list-of-packages-to-subtree! tree (get-name package)
+				      (get-children package)))
+
+  (define (populate-children-my-tree package)
+    (populate-children my-tree package))
+ 
+  (let loop ((leaves (list (get-root-package packages))))
+    (map populate-children-my-tree leaves)
+    (let ((new-leaves (map get-children leaves)))
+      (if (> (length new-leaves 0))
+	  (loop new-leaves)))))
+
 
   
+    
+    
 
 
+
+
+
+
+
+(define my-tree (list 'world (list 'france
+				   (list 'paris))
+		      (list 'spain
+			    (list 'madrid))
+			    
+		      (list 'turkey
+			    (list 'ankara))))
+
+
+
+
+
+(tree:find-tree-with-root my-tree (lambda (x)
+				     (eq? 'spain x)))
 
 
   
