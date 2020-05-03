@@ -28,9 +28,9 @@
                   (map (lambda (args) `(place ,args))
 		       all-places-to-build)
                   '()
-		  (lambda (things-to-build environment)
+		  (lambda (things-to-build symbol-definer)
 		    (let ((places (map build things-to-build)))
-		      (environment-define environment 'all-places places)
+		      (symbol-definer 'all-places places)
 		      places))))
                    
 (add-child! container place)
