@@ -153,13 +153,14 @@ Start-adventure will create a new environment, load the definitions files into t
 
 (define (find-package-by-name package-name)
   (find (lambda (package)
-	  (eq? (get-name package) package-name)) (all-packages)))
+	  (eq? (get-name package) package-name)) all-packages))
 
 (define (install-package! point-of-install new-package)
   (let ((parent (find-package-by-name point-of-install))
         (child (find-package-by-name new-package)))
-    (add-child! parent child)))
+   (if parent (add-child! parent child))))
 
+(define (uninstall-package! package-name) () ) 
 ;;; GAME STATE
 
 #|
