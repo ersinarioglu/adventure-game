@@ -7,6 +7,7 @@
 (define root
   (create-package 'root
                   '()
-                  (list 'thing)))
+                  '()))
 
+(define all-packages (list root))
 (load "adventure-game/packages/objects/thing") 

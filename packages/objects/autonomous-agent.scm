@@ -5,8 +5,10 @@
 (define autonomous-agent
   (create-package 'autonomous-agent
                   '()
-                  (list 'avatar 'troll 'student 'house-master)))
+                  '()))
 
+(add-child! people autonomous-agent)
+(append! all-packages (list autonomous-agent))
 (load "adventure-game/packages/objects/avatar")
 (load "adventure-game/packages/objects/troll")
 (load "adventure-game/packages/objects/student")

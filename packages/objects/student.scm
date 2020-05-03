@@ -4,8 +4,12 @@
 
 (define student
   (create-package 'student
-                  (list 'ben-bitdiddle
-                        'alyssa-hacker
-                        'course-6-frosh
-                        'lambda-man)
+                  (map (lambda (args) `(student ,args))
+		       '(ben-bitdiddle
+                         alyssa-hacker
+                         course-6-frosh
+                         lambda-man))
                   '()))
+
+(add-child! autonomous-agent student)
+(append! all-packages (list student))

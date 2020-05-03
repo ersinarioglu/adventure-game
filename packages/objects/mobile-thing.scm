@@ -4,8 +4,10 @@
 
 (define mobile-thing
   (create-package 'mobile-thing
-                  (list 'engineering-book)
-                  (list 'people)))
+                  '((mobile-thing engineering-book))
+                  '()))
 
+(add-child! place mobile-thing)
+(append! all-packages (list mobile-thing))
 (load "adventure-game/packages/objects/people")
 

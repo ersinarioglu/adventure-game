@@ -45,7 +45,9 @@
 
 (define (create-house-master name)
   (make-house-master 'name name
-                     'location (random-choice all-places)
-                     'restlessness (random-bias 3)
-                     'acquisitiveness 1/10
-                     'irritability (random-bias 3)))
+		     'location (random-choice all-places)
+		     'restlessness (random-bias 3)
+		     'acquisitiveness 1/10
+		     'irritability (random-bias 3)))
+
+(add-build-handler 'house-master create-house-master)

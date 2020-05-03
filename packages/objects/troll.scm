@@ -4,7 +4,10 @@
 
 (define troll
   (create-package 'troll
-                  (list 'grendel
-                        'registrar)
+                  (map (lambda (args) `(troll ,args))
+		       '(grendel
+                        'registrar))
                   '()))
 
+(add-child! autonomous-agent troll)
+(append! all-packages (list troll))

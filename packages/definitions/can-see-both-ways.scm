@@ -4,6 +4,8 @@
 
 ;;; Handler for build method
 
-(define (can-see-both-ways a b)
+(define (can-see-both-ways args)
   (can-see a b)
   (can-see b a))
+
+(add-build-handler 'can-see-both-ways can-see-both-ways)

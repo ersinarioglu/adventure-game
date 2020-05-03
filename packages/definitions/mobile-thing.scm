@@ -32,4 +32,6 @@
 ;;; Handler for build method
 (define (create-mobile-thing name location)
   (make-mobile-thing 'name name
-                     'location location))
+		     'location location))
+
+(add-build-handler 'mobile-thing create-mobile-thing)

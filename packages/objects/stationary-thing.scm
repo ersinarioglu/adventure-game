@@ -4,8 +4,12 @@
 
 (define stationary-thing
   (create-package 'stationary-thing
-                  (list (list 'black-board '10-250)
-                        (list 'lovely-trees 'great-court)
-                        (list 'flag-pole 'great-court)
-                        (list 'calder-sculpture 'the-dot))
+		  (map (lambda (args) `(thing ,args))
+		       '((black-board 10-250)
+                         (lovely-trees great-court)
+                         (flag-pole great-court)
+                         (calder-sculpture the-dot)))
                   '()))
+
+(add-child! place stationary-thing)
+(append! all-packages stationary-thing)

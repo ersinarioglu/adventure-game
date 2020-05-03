@@ -6,6 +6,7 @@
 (define container
   (create-package 'container
                   '()
-                  (list 'place)))
-
+                  '()))
+(add-child! thing container)
+(append! all-packages (list container))
 (load "adventure-game/packages/objects/place")

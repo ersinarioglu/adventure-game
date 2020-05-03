@@ -36,4 +36,6 @@
 ;;; Handler for build method
 (define (create-thing name location)
   (make-thing 'name name
-              'location location))
+	      'location location))
+
+(add-build-handler 'thing create-thing)

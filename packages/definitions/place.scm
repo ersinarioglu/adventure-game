@@ -100,12 +100,17 @@
 
 
 ;;; Handler for build method
-(define (create-place name)
-  (make-place 'name name))
+(define (create-place args)
+  (let ((name (first args)))
+    (make-place 'name name)))
+
+(add-build-handler 'place create-place)
 
 ;;; this will be used by children packages
 (define (create-exit from direction to)
   (make-exit 'name 'exit
-             'from from
-             'direction direction
-             'to to))
+	     'from from
+	     'direction direction
+	     'to to))
+
+(add build-handler 'exit create-exit)

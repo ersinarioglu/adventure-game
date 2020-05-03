@@ -54,7 +54,9 @@
          avatar))
 
 ;;; handler for build method
-(define (create-avatar name place)
+(define (create-avatar name)
   (make-avatar 'name name
-               'location place
-               'screen (make-screen 'name 'the-screen)))
+	       'location place
+	       'screen (make-screen 'name 'the-screen)))
+
+(add-build-handler 'avatar create-avatar)

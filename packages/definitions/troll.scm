@@ -32,7 +32,9 @@
 ;;; Handler for build method
 (define (create-troll name)
   (make-troll 'name name
-              'location (random-choice all-places)
-              'restlessness (random-bias 3)
-              'acquisitiveness 1/10
-              'hunger (random-bias 3)))
+	      'location (random-choice all-places)
+	      'restlessness (random-bias 3)
+	      'acquisitiveness 1/10
+	      'hunger (random-bias 3)))
+
+(add-build-handler 'troll create-troll)

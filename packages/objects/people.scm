@@ -5,8 +5,10 @@
 (define people
   (create-package 'people
                   '()
-                  (list 'autonomous-agent)))
+                  '()))
 
+(add-child! mobile-thing people)
+(append! all-packages (list people))
 (load "adventure-game/packages/objects/autonomous-agent")
 
 

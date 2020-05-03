@@ -4,11 +4,14 @@
 
 (define can-see-both-ways
   (create-package 'can-see-both-ways
-                  (list (list '32D '32G)
-                        (list 'great-dome 'little-dome)
-                        (list 'lobby-10 'infinite)
-                        (list 'lobby-7 'infinite)
-                        (list 'infinite 'bldg-26)
-                        (list 'lobby-10 'lobby-7))
+                  (map (lambda (args) `(can-see-both-ways ,@args))
+		       '((32D 32G)
+                         (great-dome little-dome)
+                         (lobby-10 infinite)
+                         (lobby-7 infinite)
+                         (infinite bldg-26)
+                         (lobby-10 lobby-7)))
                   '()))
 
+(add-child! can-see can-see-both-ways)
+(append! all-packages (list can-see-both-ways))
