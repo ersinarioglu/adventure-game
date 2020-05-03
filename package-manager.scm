@@ -159,6 +159,13 @@ Start-adventure will create a new environment, load the definitions files into t
   (let ((package (find-package-by-name package-name)))
     ()))
 
+(define build-game
+  ())
+
+(define build-people
+  ())
+
+
 (define clock)
 (define all-places)
 (define heaven)
@@ -169,7 +176,7 @@ Start-adventure will create a new environment, load the definitions files into t
   (set! clock (make-clock))
   (set! all-places (build-game))
   (set! heaven (create-place 'heaven))
-  (set! all-people (build-people))
+  (set! all-people (build-people all-places))
   (set! my-avatar
         (create-avatar name
                        (random-choice all-places)))
