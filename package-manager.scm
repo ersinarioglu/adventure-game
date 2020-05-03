@@ -102,10 +102,10 @@ Start-adventure will create a new environment, load the definitions files into t
 
 ;;; PACKAGE TREE
 
-(define package-tree (empty-tree))
-
 (define (empty-tree)
   '())
+
+(define package-tree (empty-tree))
 
 (define (beginner-tree)
   (cons 'root '()))

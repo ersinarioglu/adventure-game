@@ -10,4 +10,4 @@
                   '()))
 
 (add-child! autonomous-agent house-master)
-(append! all-packages (list housemaster))
+(append! all-packages (list house-master))
