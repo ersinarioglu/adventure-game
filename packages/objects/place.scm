@@ -27,7 +27,11 @@
   (create-package 'place
                   (map (lambda (args) `(place ,args))
 		       all-places-to-build)
-                  '()))
+                  '()
+		  (lambda (things-to-build environment)
+		    (let ((places (map build things-to-build)))
+		      (environment-define environment 'all-places places)
+		      places))))
                    
 (add-child! container place)
 (append! all-packages (list place))
