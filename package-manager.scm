@@ -62,6 +62,16 @@
                   (list root)))
 
 
+(define build
+  (simple-generic-procedure 'build 2
+			    (lambda args (error "unknown object to build:" args))))
+
+(define (add-build-handler tag handler)
+  (define-generic-procedure-handler build
+    (match-args (lambda (x) (eq? tag x))
+		list?)
+    (lambda (tag args)
+      (apply handler args))))
 
 #| ## TODO ## 
 figure out how to see the definitions provided by manage with the simple analyzer

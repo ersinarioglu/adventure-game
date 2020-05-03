@@ -30,10 +30,8 @@
     (constant-generic-procedure-handler #f)))
 
 ;;; Handler for build method
-(define (create-mobile-thing args)
-  (let ((name (first args))
-	(location (second args)))
-    (make-mobile-thing 'name name
-		       'location location)))
+(define (create-mobile-thing name location)
+  (make-mobile-thing 'name name
+		     'location location))
 
 (add-build-handler 'mobile-thing create-mobile-thing)

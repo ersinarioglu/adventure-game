@@ -10,11 +10,10 @@
   (type-instantiator student?))
 
 ;;; Handler for build method
-(define (create-student args)
-  (let ((name (first args)))
-    (make-student 'name name
-		  'location (random-choice all-places)
-		  'restlessness (random-bias 5)
-		  'acquisitiveness (random-bias 5))))
+(define (create-student name)
+  (make-student 'name name
+		'location (random-choice all-places)
+		'restlessness (random-bias 5)
+		'acquisitiveness (random-bias 5)))
 
 (add-build-handler 'student create-student)

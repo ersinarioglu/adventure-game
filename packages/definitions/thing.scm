@@ -34,10 +34,8 @@
 
 
 ;;; Handler for build method
-(define (create-thing args)
-  (let ((name (first args))
-	(location (second args)))
-    (make-thing 'name name
-		'location location)))
+(define (create-thing name location)
+  (make-thing 'name name
+	      'location location))
 
 (add-build-handler 'thing create-thing)
