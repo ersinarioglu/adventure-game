@@ -139,7 +139,7 @@ Start-adventure will create a new environment, load the definitions files into t
   
 ;;; list packages must return packages in depth first order!
 (define (list-packages)
-  (
+  ())
 
 (define (find-package-by-name package-name)
   (find (lambda (package)
@@ -147,11 +147,24 @@ Start-adventure will create a new environment, load the definitions files into t
 
 (define (install-package! package-name)
   (let ((package (find-package-by-name package-name)))
-    (
+    ()))
 
-(define (load-
+(define clock)
+(define all-places)
+(define heaven)
+(define all-people)
+(define my-avatar)
 
-
+(define (lowlevel-start-adventure name)
+  (set! clock (make-clock))
+  (set! all-places (build-game))
+  (set! heaven (create-place 'heaven))
+  (set! all-people (build-people))
+  (set! my-avatar
+        (create-avatar name
+                       (random-choice all-places)))
+  (whats-here))
+        
          
 (define (start-adventure name)
   (let* ((files-to-install (list-packages))
@@ -161,29 +174,3 @@ Start-adventure will create a new environment, load the definitions files into t
 		     (lowlevel-start-adventure name))))
         (ge game-env)))
 
-
-;;; Methods to examine current adventure
-;; list packages
-
-;; list places
-
-;; list rules
-
-;; list object-types
-
-
-;;; Methods to add to world
-
-#| ## TODO ##
-Things we need to make this work
-a) analyzer (above)
-b) (use-package <name>) syntax in loadspec
-|#
-
-
-;;; Methods to remove from world
-
-#| ## TODO ##
-a) remove-handler message for generic
-    (override the common/generics file?
-b) update package listing and checking dependencies
