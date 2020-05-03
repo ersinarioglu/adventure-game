@@ -14,7 +14,7 @@
   (make-property 'build-method
 		 'predicate procedure?
 		 'default-value (lambda (things-to-build environment)
-				  (map build things-to-build))
+				  (map build things-to-build))))
 
 (define package?
   (make-type 'package (list package:things-to-build
