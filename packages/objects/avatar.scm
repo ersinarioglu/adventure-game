@@ -6,3 +6,6 @@
   (create-package 'avatar
                   '(avatar my-name)
                   '()))
+
+(add-child! autonomous-agent avatar)
+(append! all-packages (list avatar))

@@ -25,3 +25,5 @@
                          (student-street up down 32G)
                          (student-street skew down 32D)))
                   '()))
+(add-child! movement-rules can-go-both-ways)
+(append! all-packages (list can-go-both-ways))

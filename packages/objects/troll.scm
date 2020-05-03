@@ -9,3 +9,5 @@
                         'registrar))
                   '()))
 
+(add-child! autonomous-agent troll)
+(append! all-packages (list troll))

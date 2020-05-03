@@ -13,6 +13,7 @@
                          (bldg-54 the-dot)
                          (lobby-10 great-court)
                          (great-dome great-court)))
-                  (list 'can-see-both-ways)))
-
+                  '()))
+(add-child! visibility-rules can-see)
+(append! all-packages (list can-see))
 (load "adventure-game/packages/objects/can-see-both-ways")

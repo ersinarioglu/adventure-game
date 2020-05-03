@@ -10,3 +10,6 @@
                          course-6-frosh
                          lambda-man))
                   '()))
+
+(add-child! autonomous-agent student)
+(append! all-packages (list student))

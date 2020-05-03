@@ -3,7 +3,7 @@
 ;;; Gretchen Eggers, Ersin Arioglu, Nick Janovetz
 
 ;;; Place package
-(define all-places
+(define all-places-to-build
   (list 'great-dome
    'little-dome
    'lobby-10
@@ -25,11 +25,12 @@
 
 (define place
   (create-package 'place
-                  (map (lambda (args) `(place args))
-		       all-places)
-                  (list 'rules
-                        'mobile-thing
-                        'stationary-thing)))
+                  (map (lambda (args) `(place ,args))
+		       all-places-to-build)
+                  '()))
+                   
+(add-child! container place)
+(append! all-packages (list place))
 
 (load "adventure-game/packages/objects/rules")
 (load "adventure-game/packages/objects/mobile-thing")
