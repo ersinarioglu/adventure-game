@@ -143,7 +143,12 @@ Start-adventure will create a new environment, load the definitions files into t
 (define (install-package! point-of-install new-package)
   (let ((parent (find-package-by-name point-of-install))
         (child (find-package-by-name new-package)))
-   (if parent (add-child! parent child))))
+    (cond ((and parent child) (add-child! parent child)
+                  (display "\nInstallation successful."))
+          ((and parent (not child)) (display "\nOops, the package you're trying to install doesn't exist."))
+          ((and (not parent) child) (display "\nOops, the point of installation doesn't exist- try listing the packages to see which packages are currently installed."))
+          (else (display "Neither of those packages exist."))
+          )))
 
 (define (uninstall-package! package-name) () )
 
@@ -193,9 +198,10 @@ build to symbols in the game environment
 ;;; UI ANNOUNCEMENT
 
 (newline)
-(display "Welcome to the adventure game package manager!\n")
-(newline)
-(display "Here's a few commands to get you started:\n")
-(display "'list-packages' : returns the names of all currently installed packages\n")
-(display "'install-package [package] [package] ...' : installs new packages onto default package\n")
-(display "'start-adventure [your-name]' : begins an adventure in a world with all currently installed packages")
+(write-line "Welcome to the adventure game package manager!\n")
+(write-line "Here's a few commands to get you started:\n")
+(write-line  "---------------------------------------------------------------")
+(write-line  "'list-packages' : returns the names of all currently installed packages\n")
+(write-line  "'install-package! [parent-package] [new-package]' : \ninstalls new packages as children of parent package\n")
+(write-line "'uninstall-package! [package]' : \nuninstalls package and all of the package's children, if it exists and is currently installed\n") 
+(write-line "'start-adventure [your-name]' : begins an adventure in a world with all currently installed packages")
