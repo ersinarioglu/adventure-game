@@ -335,8 +335,10 @@
 		      game-env))
 	      packages)
 
-    (symbol-definer 'clock (make-clock))
+    (symbol-definer 'the-clock (make-clock))
     (symbol-definer 'heaven (build '(place heaven)))
+
+    (load (sanitize-pathstring "adventure-game-ui") game-env)
 
     (let ((objects (apply append (map
 		    (lambda (package)
@@ -347,8 +349,6 @@
 		    packages))))
       (symbol-definer 'all-people (filter person? objects))
       (symbol-definer 'my-avatar (build `(avatar ,name))))
-
-    (load (sanitize-pathstring "adventure-game-ui") game-env)
     
     (eval '(whats-here) game-env)
     (ge game-env)))
