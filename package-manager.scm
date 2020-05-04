@@ -202,18 +202,6 @@
   (find (lambda (package)
 	  (eq? (get-name package) package-name)) all-packages))
 
-(define (install-package! point-of-install new-package)
-  (let ((parent (find-package-by-name point-of-install))
-        (child (find-package-by-name new-package)))
-    (cond ((and parent child) (add-child! parent child)
-                  (display "\nInstallation successful."))
-          ((and parent (not child)) (display "\nOops, the package you're trying to install doesn't exist."))
-          ((and (not parent) child) (display "\nOops, the point of installation doesn't exist- try listing the packages to see which packages are currently installed."))
-          (else (display "\nNeither of those packages exist."))
-          )))
-
-(define (uninstall-package! package-name) () )
-
 ;;; listing
 
 
@@ -246,18 +234,43 @@
               (> (cdr p1) (cdr p2))))))
 
 
+(define (install-package! point-of-install new-package)
+  (let ((parent (find-package-by-name point-of-install))
+        (child (find-package-by-name new-package)))
+
+    (cond ((and parent child)
+           ((add-child! parent new-package)
+            (set-parent! child point-of-install)
+            (add-object-to-subtree-with-root-package! package-tree point-of-install child)
+            (display "\nInstallation successful.")))
+
+          ((and parent (not child))
+           (display "\nOops, the package you're trying to install doesn't exist."))
+
+          ((and (not parent) child)
+           (display "\nOops, the point of installation doesn't exist- try listing the packages to see which packages are currently installed."))
+
+          (else (display "\nNeither of those packages exist."))
+          )))
+
+
 (define (uninstall-package! package-name)
-  (let ((parent (get-parent (find-package-by-name package-name)))
+  (let* ((the-package (find-package-by-name package-name))
+        (parent-name (get-parent the-package))
         (children (get-subtree-with-root-package package-tree package-name)))
-    (cond (parent
-           (cond (children
-                  (display (list package-name "was uninstalled along with all children:" children))
-                  (remove-child parent package-name))
-                 (else
-                  (display (list package-name "was uninstalled and had no children"))
-                  (remove-child parent package-name))))
+    
+    (cond (parent-name
+           ((remove-child (find-package-by-name parent-name) package-name)
+            (remove-parent the-package '())
+            ;; tree remove proc goes here
+            (cond (children
+                  (display (list package-name " was uninstalled along with all children.")))
+                  (else
+                  (display (list package-name "was uninstalled and had no children"))))))
+
           (else (display "\nOops, this package can't be uninstalled! 
 It's either not currently installed, or you're trying to uninstall root...")))))
+
 
 (define (list-things-to-build package-name)
   (let ((package (find-package-by-name package-name)))
