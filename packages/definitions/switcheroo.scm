@@ -1,3 +1,50 @@
+;;; Aware Things
+
+; Things that are "aware" of other things (have refs to them)
+(define aware-thing:instances
+  (make-property 'instances
+		 'predicate (is-list-of thing?)
+		 'default-value '()))
+
+; type creation
+(define aware-thing?
+  (make-type 'aware-thing (list aware-thing:instances)))
+(set-predicate<=! aware-thing? thing?)
+
+; constructor
+(define make-aware-thing
+  (type-instantiator aware-thing?))
+
+; get the instances aware of
+(define get-instances
+  (property-getter aware-thing:instances aware-thing?))
+
+; set the instances aware of
+(define set-instances
+  (property-setter aware-thing:instances
+		   aware-thing?
+		   (is-list-of thing?)))
+
+;;; Interaction
+
+; generic procedure
+(define generic-interact!
+  (most-specific-generic-procedure 'generic-interact! 2 #f))
+
+; uninteractable
+(define-generic-procedure-handler generic-interact!
+  (match-args thing? person?)
+  (lambda (thing person)
+    (tell! (list thing "doesn't seem to have a function.")
+	   person)))
+
+; using things by the avatar
+(define (use-thing name)
+  (let ((thing (find-thing name (here))))
+    (if thing
+	(generic-interact! thing my-avatar)))
+  'done)
+
 ;;; Switcheroo Button
 
 (define switcheroo-button:failure
@@ -9,6 +56,7 @@
 (define switcheroo-button?
   (make-type 'switcheroo-button (list switcheroo-button:failure)))
 (set-predicate<=! switcheroo-button? aware-thing?)
+(set-predicate<=! switcheroo-button? mobile-thing?)
 
 ; make a button
 (define make-switcheroo-button
