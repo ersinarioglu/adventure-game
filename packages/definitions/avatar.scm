@@ -56,7 +56,7 @@
 ;;; handler for build method
 (define (create-avatar name)
   (make-avatar 'name name
-	       'location place
+	       'location (random-choice all-places)
 	       'screen (make-screen 'name 'the-screen)))
 
 (add-build-handler 'avatar create-avatar)
