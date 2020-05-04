@@ -131,7 +131,7 @@
   (let ((sub-tree (tree:find-tree-with-root tree predicate)))
     (if sub-tree
 	(append! sub-tree (list new-tree))
-	#f)))
+        #f)))
 
 ;; Adds given "object" as a node under a node that satisfies "predicate" in "tree"
 (define (tree:add-object-to-place! tree predicate object)
@@ -162,6 +162,10 @@
   (tree:add-object-to-place! tree (lambda (package)
 				    (eq? (get-name package) root-package-name))
 			     object))
+
+(define (append-sub-tree! tree root-package-name sub-tree)
+  (let ((append-node (get-subtree-with-root-package tree root-package-name)))
+    (append! append-node (list sub-tree))))
 
 (define (add-list-of-packages-to-subtree! tree root-package-name objects)
   (define (helper object)
@@ -202,6 +206,36 @@
     (populate-children my-tree package))
  
   (let loop ((leaves (list (find-root-package packages))))
+    (set! new-leaves (list))
+    (map populate-children-my-tree leaves)
+    (if (> (length new-leaves) 0)
+	(loop new-leaves)
+	my-tree)))
+
+(define (populate-subtree-from-package package)
+  (define my-tree (list package))
+
+
+  (define new-leaves (list))
+
+  (define (get-child-packages package)
+    (define (helper package-name)
+      (find-package-in-list all-packages package-name))
+    (map helper (get-children package)))
+
+
+  ;; Adds the children of a given "package" to "tree" if "package" is in "tree"
+  (define (populate-children tree package)
+    (let ((child-packages (get-child-packages package)))
+      (add-list-of-packages-to-subtree! tree (get-name package)
+					child-packages)
+      
+      (set! new-leaves (append! new-leaves child-packages))))
+
+  (define (populate-children-my-tree package)
+    (populate-children my-tree package))
+ 
+  (let loop ((leaves (list package)))
     (set! new-leaves (list))
     (map populate-children-my-tree leaves)
     (if (> (length new-leaves) 0)
@@ -270,14 +304,20 @@
 
 (define (install-package! point-of-install new-package)
   (let ((parent (find-package-by-name point-of-install))
-        (child (find-package-by-name new-package)))
+        (child (find-package-by-name new-package))
+        (new-sub-tree '()))
 
     (cond ((and parent child)
            (add-child! parent new-package)
-            (set-parent! child point-of-install)
-            (add-object-to-subtree-with-root-package! package-tree point-of-install child)
-            (display "\nInstallation successful."))
+           (set-parent! child point-of-install)
+           (cond ((not (null? (get-children child)))
+                  (set! new-sub-tree (populate-subtree-from-package child))
+                  (append-sub-tree! package-tree point-of-install new-sub-tree))
+                 (else
+                  (add-object-to-subtree-with-root-package! package-tree point-of-install child)))
 
+            (display "\nInstallation successful."))
+          
           ((and parent (not child))
            (display "\nOops, the package you're trying to install doesn't exist."))
 
@@ -293,10 +333,8 @@
     
     (cond (the-package
            (let ((parent-name (get-parent the-package))
-                 (children (get-subtree-with-root-package package-tree the-package)))
-    
+                 (children (get-subtree-with-root-package package-tree package-name)))
              (cond ((not (null? parent-name))
-                    (display parent-name)
                     (remove-child (find-package-by-name parent-name) package-name)
                     (remove-parent the-package '())
                     (remove-package-from-tree package-tree package-name)
