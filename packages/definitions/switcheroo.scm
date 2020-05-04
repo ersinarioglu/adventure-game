@@ -56,6 +56,7 @@
 (define switcheroo-button?
   (make-type 'switcheroo-button (list switcheroo-button:failure)))
 (set-predicate<=! switcheroo-button? aware-thing?)
+(set-predicate<=! switcheroo-button? mobile-thing?)
 
 ; make a button
 (define make-switcheroo-button
