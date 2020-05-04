@@ -117,8 +117,15 @@
   result)
 	
 
-
-
+(define (tree:get-all-elements tree)
+  (define result (list))
+  (define (helper tree)
+    (if (not (eq? tree (empty-tree)))
+	(begin
+	  (set! result (cons (tree:get-root tree) result))
+	  (map helper (tree:get-sub-trees tree)))))
+  (helper tree)
+  result)
 
     
 
@@ -168,10 +175,10 @@
 
 ;; Returns a new tree made from packages not including the package with
 ;; "package-name".
-(define (remove-package-from-tree package-name all-packages)
+(define (remove-package-from-tree tree package-name)
   (let ((excluded (filter (lambda (package)
 			    (not (eq? (get-name package) package-name)))
-			  all-packages)))
+			  (tree:get-all-elements tree))))
     (make-tree-from-packages excluded)))
 	 
 ;; packages is a list of packages
