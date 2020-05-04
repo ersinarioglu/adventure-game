@@ -11,7 +11,7 @@
                          (lobby-7 infinite)
                          (infinite bldg-26)
                          (lobby-10 lobby-7)))
-                  '()))
+                  '()
+                  (list 'can-see)))
 
-(add-child! can-see can-see-both-ways)
 (append! all-packages (list can-see-both-ways))

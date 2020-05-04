@@ -27,13 +27,13 @@
   (create-package 'place
                   (map (lambda (args) `(place ,args))
 		       all-places-to-build)
-                  '()
+                  (list 'rules 'mobile-thing 'stationary-thing)
+                  (list 'container)
 		  (lambda (things-to-build symbol-definer)
 		    (let ((places (map build things-to-build)))
 		      (symbol-definer 'all-places places)
 		      places))))
                    
-(add-child! container place)
 (append! all-packages (list place))
 
 (load "adventure-game/packages/objects/rules")

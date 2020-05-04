@@ -9,7 +9,7 @@
                          (lovely-trees great-court)
                          (flag-pole great-court)
                          (calder-sculpture the-dot)))
-                  '()))
+                  '()
+                  (list 'place)))
 
-(add-child! place stationary-thing)
 (append! all-packages stationary-thing)

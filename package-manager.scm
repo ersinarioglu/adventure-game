@@ -237,14 +237,25 @@
 (define (install-package! point-of-install new-package)
   (let ((parent (find-package-by-name point-of-install))
         (child (find-package-by-name new-package)))
-    (cond ((and parent child) (add-child! parent child)
+    (cond ((and parent child) (add-child! parent new-package)
                   (display "\nInstallation successful."))
           ((and parent (not child)) (display "\nOops, the package you're trying to install doesn't exist."))
           ((and (not parent) child) (display "\nOops, the point of installation doesn't exist- try listing the packages to see which packages are currently installed."))
           (else (display "\nNeither of those packages exist."))
           )))
 
-(define (uninstall-package! package-name) () )
+(define (uninstall-package! package-name)
+  (let ((parent (find-package-by-name (get-parent package-name)))
+        (children (get-subtree-with-root-package package-tree package-name)))
+    (cond ((parent)
+           (cond ((children)
+                  (display (list package-name "was uninstalled along with all children:" children))
+                  (remove-child parent package-name))
+                 (else
+                  (display (list package-name "was uninstalled and had no children"))
+                  (remove-child parent package-name))))
+          (else (display "\nOops, this package can't be uninstalled! 
+It's either not currently installed, or you're trying to uninstall root...")))))
 
 ;;; GAME STATE
 

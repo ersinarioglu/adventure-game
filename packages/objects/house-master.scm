@@ -7,7 +7,7 @@
                   (map (lambda (args) `(house-master ,@args))
 		       '((dr-evil)
 			 (mr-bigglesworth)))
-                  '()))
+                  '()
+                  (list 'autonomous-agent)))
 
-(add-child! autonomous-agent house-master)
 (append! all-packages (list house-master))
