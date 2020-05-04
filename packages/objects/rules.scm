@@ -4,7 +4,6 @@
 
 (define rules
   (create-package 'rules
-                  '()
                   (list 'movement-rules 'visibility-rules)
                   (list 'place)))
                         
