@@ -9,5 +9,4 @@
                   (list 'place)
                   (list 'thing)))
 
-(append! all-packages (list container))
 (load "adventure-game/packages/objects/place")

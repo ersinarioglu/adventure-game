@@ -10,5 +10,4 @@
                   (list 'thing)    ;children
                   '()))  ;parent
 
-(define all-packages (list root))
 (load "adventure-game/packages/objects/thing") 

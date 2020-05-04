@@ -8,4 +8,4 @@
                   '()
                   (list 'autonomous-agent)))
 
-(append! all-packages (list avatar))
+

@@ -1,5 +1,5 @@
 
-(define loaded-packages '())
+(define all-packages '())
 
 ;;; Package type definition
 (define package:things-to-build
@@ -44,7 +44,7 @@
 			   'children children
                            'parent parent
 			   'build-method build-method))))
-    (set! loaded-packages (cons created-package loaded-packages))
+    (set! all-packages (cons created-package all-packages))
     created-package))
 
 (define get-things-to-build

@@ -14,4 +14,4 @@
                   '()
                   (list 'can-see)))
 
-(append! all-packages (list can-see-both-ways))
+

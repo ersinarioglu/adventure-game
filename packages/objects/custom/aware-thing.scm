@@ -4,4 +4,4 @@
                   '()
 		  '()))
 
-(append! all-packages (list aware-thing))
+

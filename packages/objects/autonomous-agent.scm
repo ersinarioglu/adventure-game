@@ -8,7 +8,6 @@
                   (list 'avatar 'troll 'student 'house-master)
                   (list 'people)))
 
-(append! all-packages (list autonomous-agent))
 (load "adventure-game/packages/objects/avatar")
 (load "adventure-game/packages/objects/troll")
 (load "adventure-game/packages/objects/student")

@@ -8,6 +8,6 @@
                   (list 'movement-rules 'visibility-rules)
                   (list 'place)))
                         
-(append! all-packages (list rules))
+
 (load "adventure-game/packages/objects/movement-rules")
 (load "adventure-game/packages/objects/visibility-rules")

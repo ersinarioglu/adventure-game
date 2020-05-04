@@ -16,5 +16,4 @@
                   (list 'can-see-both-ways)
                   (list 'visibility-rules)))
 
-(append! all-packages (list can-see))
 (load "adventure-game/packages/objects/can-see-both-ways")

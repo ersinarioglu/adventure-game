@@ -8,6 +8,6 @@
                   (list 'can-see)
                   (list 'rules)))
 
-(append! all-packages (list visibility-rules)) 
+
 (load "adventure-game/packages/objects/can-see")
 

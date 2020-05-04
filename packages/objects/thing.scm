@@ -8,7 +8,6 @@
                   (list 'container)
                   (list 'root)))
 
-(append! all-packages (list thing))
 (load "adventure-game/packages/objects/container") 
 
 

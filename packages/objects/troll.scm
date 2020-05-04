@@ -10,4 +10,4 @@
                   '()
                   (list 'autonomous-agent)))
 
-(append! all-packages (list troll))
+

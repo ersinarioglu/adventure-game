@@ -8,7 +8,7 @@
                   (list 'autonomous-agent)
                   (list 'mobile-thing)))
 
-(append! all-packages (list people))
+
 (load "adventure-game/packages/objects/autonomous-agent")
 
 

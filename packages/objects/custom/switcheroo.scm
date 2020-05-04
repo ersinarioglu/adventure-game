@@ -14,4 +14,4 @@
 		      (set-swticheroo-instance (second objects) (first objects)))
 		    objects)))
 
-(append! all-packages switcheroo)
+

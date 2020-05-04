@@ -27,4 +27,4 @@
                   '()
                   (list 'movement-rules)))
 
-(append! all-packages (list can-go-both-ways))
+

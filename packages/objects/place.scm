@@ -34,7 +34,7 @@
 		      (symbol-definer 'all-places places)
 		      places))))
                    
-(append! all-packages (list place))
+
 
 (load "adventure-game/packages/objects/rules")
 (load "adventure-game/packages/objects/mobile-thing")

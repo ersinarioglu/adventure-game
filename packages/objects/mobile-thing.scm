@@ -8,6 +8,6 @@
                   (list 'people)
                   (list 'place)))
 
-(append! all-packages (list mobile-thing))
+
 (load "adventure-game/packages/objects/people")
 

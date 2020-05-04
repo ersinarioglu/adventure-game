@@ -12,4 +12,4 @@
                   '()
                   (list 'place)))
 
-(append! all-packages stationary-thing)
+

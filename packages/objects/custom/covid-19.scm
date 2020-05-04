@@ -7,5 +7,5 @@
                 '()
                 '()
                 '()))
-(append! all-packages (list covid-19))
+
                 
