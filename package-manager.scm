@@ -340,24 +340,23 @@
 		      game-env))
 	      packages)
 
-    ;(ge game-env)
-    
     (symbol-definer 'clock (make-clock))
     (symbol-definer 'heaven (build '(place heaven)))
 
-    (let ((objects (append-map (lambda (package)
-				 (eval '(build-package package symbol-definer)
-				       (extend-top-level-environment
-					game-env
-					'(symbol-definer package)
-					(list symbol-definer package))))
-			       packages)))
+    (let ((objects (append-map
+		    (lambda (package)
+		      (load (sanitize-pathstring
+			     (string-append "packages/build/"
+					    (symbol->string (get-name package))))
+			    game-env))
+		    packages)))
       (symbol-definer 'all-people (filter person? objects))
       (symbol-definer 'my-avatar (build `(avatar ,name))))
 
     (load (sanitize-pathstring "adventure-game-ui") game-env)
     
-    (whats-here)))
+    (eval '(whats-here) game-env)
+    (ge game-env)))
 
 ;;; UI OPENING ANNOUNCEMENT
 
