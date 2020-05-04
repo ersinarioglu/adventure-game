@@ -402,8 +402,13 @@
       (symbol-definer 'all-people (filter (environment-lookup game-env 'person?) objects))
       (symbol-definer 'my-avatar (build `(avatar ,name))))
     
-    (eval '(whats-here) game-env)
-    (ge game-env)))
+    (ge game-env)
+
+    (newline)(newline)
+    (display "Start your adventure ") (display name)
+    (newline)
+
+    (eval '(whats-here) game-env)))
 
 ;;; UI OPENING ANNOUNCEMENT
 
