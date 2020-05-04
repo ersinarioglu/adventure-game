@@ -49,20 +49,6 @@
 		    (not (string-prefix? "." (pathname-name pn))))
 		  (directory-read (sanitize-pathstring "packages/objects/custom/"))))
 
-
-;;; BUILD DEFAULT PACKAGE FROM ROOT
-
-(define (create-package name things-to-build children)
-  (make-package 'name name
-                'things-to-build things-to-build
-                'children children))
-
-(define default-package
-  (create-package 'default-package
-                  '()
-                  (list root)))
-
-
 ;;; BUILD
 
 (define build
@@ -405,7 +391,7 @@
     (ge game-env)
 
     (newline)(newline)
-    (display "Start your adventure ") (display name)
+    (display "Start your adventure ") (display name) (display "...")
     (newline)
 
     (eval '(whats-here) game-env)))
