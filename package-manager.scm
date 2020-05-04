@@ -45,7 +45,7 @@
 		  (directory-read (sanitize-pathstring "packages/objects/custom/"))))
 
 
-;;; Building default package
+;;; BUILD GRAB DEFAULT PACKAGE FROM ROOT
 
 (define (create-package name things-to-build children)
   (make-package 'name name
@@ -116,7 +116,6 @@
   (find-tree-with-root-helper tree)
   result)
 	
-
 (define (tree:get-all-elements tree)
   (define result (list))
   (define (helper tree)
@@ -126,10 +125,6 @@
 	  (map helper (tree:get-sub-trees tree)))))
   (helper tree)
   result)
-
-    
-
-
 
 ;; Adds given "new-tree" under node in "tree" that satisfies "predicate".
 (define (tree:add-tree-to-place! tree predicate new-tree)
@@ -220,9 +215,6 @@
   (find (lambda (package)
 	  (eq? (get-name package) package-name)) all-packages))
 
-;;; listing
-
-
 (define (longest-path-to-leaves-hash tree-in)
   (let ((hash (make-strong-eq-hash-table)))
     (let longest-depth ((tree tree-in))
@@ -244,10 +236,9 @@
 		   value)))))))
     hash))
 
-; returns packages in load order, ie sorted by the depends relation
-
+;;; PACKAGE MANAGER UI
   
-;;; list packages must return packages in depth first order!
+;;; list packages must return packages in ordering that doesn't violate dependency relationships!
 (define (list-packages)
   (map car
        (sort (hash-table->alist
@@ -256,17 +247,26 @@
               (> (cdr p1) (cdr p2))))))
 
 
-(define (pretty-print-list-packages)
-  (let ((depth-first-names (map get-name (list-packages))))
-    (for-each (lambda (name)
+(define (list-installed-packages)
+  (let ((installed-names (map get-name (list-packages))))
+        (for-each (lambda (name)
                 (let ((current-package (find-package-by-name name)))
-                  (display name)
-                  (newline))) depth-first-names)))
+                      (display "[")
+                      (display name)
+                      (display "]\n")
+                                    )) installed-names)))
    
-   
-   
-   
-   
+(define (list-all-packages)
+  (let ((all-names (map get-name all-packages)))
+        (for-each (lambda (name)
+                (let ((current-package (find-package-by-name name)))
+                      (display "[")
+                      (display name)
+                      (display "]")
+                      (cond ((not (find-package-in-list (list-packages) name))
+                             (display "*")))
+                      (newline)
+                                    )) all-names)))
   
 
 (define (install-package! point-of-install new-package)
@@ -359,7 +359,7 @@
     
     (whats-here)))
 
-;;; UI ANNOUNCEMENT
+;;; UI OPENING ANNOUNCEMENT
 
 (newline)
 (display "Welcome to the adventure game package manager!\n")
