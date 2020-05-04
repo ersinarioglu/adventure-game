@@ -378,7 +378,7 @@
 	  'ok
 	  (error "conflicts:" conflicting-definers)))
     
-    (load (sanitize-pathstring "package-substrate") game-env)
+    ;(load (sanitize-pathstring "package-substrate") game-env)
     
     (define (symbol-definer name value)
       (environment-define game-env name value))
