@@ -245,6 +245,27 @@
               (> (cdr p1) (cdr p2))))))
 
 
+(define (uninstall-package! package-name)
+  (let ((parent (get-parent (find-package-by-name package-name)))
+        (children (get-subtree-with-root-package package-tree package-name)))
+    (cond (parent
+           (cond (children
+                  (display (list package-name "was uninstalled along with all children:" children))
+                  (remove-child parent package-name))
+                 (else
+                  (display (list package-name "was uninstalled and had no children"))
+                  (remove-child parent package-name))))
+          (else (display "\nOops, this package can't be uninstalled! 
+It's either not currently installed, or you're trying to uninstall root...")))))
+
+(define (list-things-to-build package-name)
+  (let ((package (find-package-by-name package-name)))
+    (display (get-things-to-build package))))
+
+
+(define (add-new-thing! package-name thing-to-build-name)
+  ())
+
 ;;; GAME STATE
 
 (define (start-adventure name)

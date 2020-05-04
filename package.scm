@@ -9,7 +9,7 @@
 
 (define package:children
   (make-property 'children
-                 'predicate (is-list-of object?)
+                 'predicate (is-list-of symbol?)
                  'default-value '()))
 
 (define package:build-method
