@@ -7,7 +7,7 @@
 (define place
   (create-package 'place
                   (list 'rules 'mobile-thing 'stationary-thing)
-                  (list 'container)))
+                  'container))
 
 
 (load "adventure-game/packages/objects/rules")

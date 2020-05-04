@@ -5,6 +5,6 @@
 (define stationary-thing
   (create-package 'stationary-thing
                   '()
-                  (list 'place)))
+                  'place))
 
 

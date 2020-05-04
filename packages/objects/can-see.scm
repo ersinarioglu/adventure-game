@@ -5,6 +5,6 @@
 (define can-see
   (create-package 'can-see
                   (list 'can-see-both-ways)
-                  (list 'visibility-rules)))
+                  'visibility-rules))
 
 (load "adventure-game/packages/objects/can-see-both-ways")

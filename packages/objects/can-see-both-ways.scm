@@ -5,6 +5,6 @@
 (define can-see-both-ways
   (create-package 'can-see-both-ways
                   '()
-                  (list 'can-see)))
+                  'can-see))
 
 

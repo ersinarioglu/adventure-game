@@ -5,7 +5,7 @@
 (define visibility-rules
   (create-package 'visibility-rules
                   (list 'can-see)
-                  (list 'rules)))
+                  'rules))
 
 
 (load "adventure-game/packages/objects/can-see")

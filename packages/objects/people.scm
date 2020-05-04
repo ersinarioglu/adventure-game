@@ -5,7 +5,7 @@
 (define people
   (create-package 'people
                   (list 'autonomous-agent)
-                  (list 'mobile-thing)))
+                  'mobile-thing))
 
 
 (load "adventure-game/packages/objects/autonomous-agent")

@@ -5,6 +5,6 @@
 (define troll
   (create-package 'troll
                   '()
-                  (list 'autonomous-agent)))
+                  'autonomous-agent))
 
 
