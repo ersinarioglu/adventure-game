@@ -340,7 +340,7 @@
                     (remove-child (find-package-by-name parent-name) package-name)
                     (remove-parent the-package '())
                     (remove-package-from-tree package-tree package-name)
-                    (cond (children
+                    (cond ((< 1 (length children))
                            (display package-name)
                            (display " was uninstalled along with all of its children."))
                           (else
