@@ -1,0 +1,22 @@
+(define great-dome (build '(place great-dome)))
+(define little-dome (build '(place little-dome)))
+(define lobby-10 (build '(place lobby-10)))
+(define 10-250 (build '(place 10-250)))
+(define barker-library (build '(place barker-library)))
+(define lobby-7 (build '(place lobby-7)))
+(define infinite (build '(place infinite)))
+(define bldg-26 (build '(place bldg-26)))
+(define cp32 (build '(place cp32)))
+(define tunnel (build '(place tunnel)))
+(define 32-123 (build '(place 32-123)))
+(define 32g (build '(place 32g)))
+(define 32d (build '(place 32d)))
+(define student-street (build '(place student-street)))
+(define great-court (build '(place great-court)))
+(define bldg-54 (build '(place bldg-54)))
+(define the-dot (build '(place the-dot)))
+(define dorm-row (build '(place dorm-row)))
+
+(define all-places (list great-dome little-dome lobby-10 10-250 barker-library lobby-7 infinite bldg-26 cp32 tunnel 32-123 32g 32d student-street great-court bldg-54 the-dot dorm-row))
+
+all-places
