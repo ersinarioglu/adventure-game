@@ -50,7 +50,7 @@
 		  (directory-read (sanitize-pathstring "packages/objects/custom/"))))
 
 
-;;; BUILD GRAB DEFAULT PACKAGE FROM ROOT
+;;; BUILD DEFAULT PACKAGE FROM ROOT
 
 (define (create-package name things-to-build children)
   (make-package 'name name
@@ -81,14 +81,13 @@
     (lambda (lst)
       (apply handler (cdr lst)))))
 
-;;; THESE DEFINE A TREE DATA TYPE
+;;; TREE DATA TYPE
 
 (define (empty-tree)
   (list))
 
 (define (new-tree-with-root name)
   (list name))
-
 
 ;; Gets the value of the root node in the tree.
 (define (tree:get-root tree)
@@ -138,15 +137,14 @@
   (tree:add-tree-to-place! tree predicate (list object)))
 
 
-;;; NOW WE ADD UTILITIES FOR PACKAGES:
-
-
+;;; TREE/PACKAGE UTILITIES:
 
 ;; Finds package in list of "packages" that has "name"
 (define (find-package-in-list packages name)
   (find (lambda (package)
 	  (eq? name (get-name package))) packages))
 
+;; Fetch root package
 (define (find-root-package packages)
   (find-package-in-list packages 'root))
 
@@ -156,17 +154,19 @@
 				   (eq? (get-name package) package-name))))
 
 ;; Adds "object" in "tree", under node that has package name
-;; "root-package-name".
+;; "root-package-name"
 (define (add-object-to-subtree-with-root-package! tree root-package-name
 					   object)
   (tree:add-object-to-place! tree (lambda (package)
 				    (eq? (get-name package) root-package-name))
 			     object))
 
+;; Adds "sub-tree" as a child to the node in "tree" with name "root-package-name"
 (define (append-sub-tree! tree root-package-name sub-tree)
   (let ((append-node (get-subtree-with-root-package tree root-package-name)))
     (append! append-node (list sub-tree))))
 
+;; Adds every object in "objects" in "tree" as children of node named "root-package-name"
 (define (add-list-of-packages-to-subtree! tree root-package-name objects)
   (define (helper object)
     (add-object-to-subtree-with-root-package! tree root-package-name object))
@@ -180,8 +180,7 @@
 			  (tree:get-all-elements tree))))
     (set! package-tree (make-tree-from-packages excluded))))
 	 
-;; packages is a list of packages
-
+;; Builds entire tree from root
 (define (make-tree-from-packages packages)
   (define my-tree (list (find-root-package packages)))
 
@@ -212,6 +211,7 @@
 	(loop new-leaves)
 	my-tree)))
 
+;; Builds tree with root at package
 (define (populate-subtree-from-package package)
   (define my-tree (list package))
 
@@ -242,12 +242,14 @@
 	(loop new-leaves)
 	my-tree)))
 
+;; The default tree build
 (define package-tree (make-tree-from-packages all-packages))
 
 (define (find-package-by-name package-name)
   (find (lambda (package)
 	  (eq? (get-name package) package-name)) all-packages))
 
+;; Helper for list-packages
 (define (longest-path-to-leaves-hash tree-in)
   (let ((hash (make-strong-eq-hash-table)))
     (let longest-depth ((tree tree-in))
@@ -347,16 +349,6 @@
                    
                    (else (display "\nOops, this package can't be uninstalled! This is the root package.")))))
           (else (display "\nOops, this package can't uninstalled! It's not currently installed.")))))
-
-
-
-(define (list-things-to-build package-name)
-  (let ((package (find-package-by-name package-name)))
-    (display (get-things-to-build package))))
-
-
-(define (add-new-thing! package-name thing-to-build-name)
-  ())
 
 ;;; GAME STATE
 
