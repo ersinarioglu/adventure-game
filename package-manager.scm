@@ -33,15 +33,16 @@
 	    (> (length (cdr name-definers-pair)) 1))
 	  (hash-table->alist by-name-index)))
 
-(let ((here (directory-pathname (current-load-pathname))))
-  (for-each (lambda (package-object-pathname)
-	      (load (->namestring package-object-pathname)))
-	    (filter (lambda (pn)
-		      (not (string-prefix? "." (pathname-name pn))))
-	     (directory-read (->namestring
-			      (merge-pathnames
-			       (->pathname "packages/objects/custom/")
-			       here))))))
+(define directory-path (directory-pathname (current-load-pathname)))
+
+(define (sanitize-pathstring pathstring)
+    (->namestring (merge-pathnames (->pathname pathstring) directory-path)))
+
+(for-each (lambda (package-object-pathname)
+	    (load (->namestring package-object-pathname)))
+	  (filter (lambda (pn)
+		    (not (string-prefix? "." (pathname-name pn))))
+		  (directory-read (sanitize-pathstring "packages/objects/custom/"))))
 
 
 ;;; Building default package
@@ -77,14 +78,8 @@
 
 (define (build-package package symbol-definer)
   (let ((things-to-build (get-things-to-build package))
-	(children (get-children package))
 	(build-method (get-build-method package)))
-    (append (build-method-package things-to-build symbol-definer)
-	    (reduce-left append '()
-			 (map (lambda (child)
-				(build-package child symbol-definer))
-			      children)))))
-
+    (build-method things-to-build symbol-definer)))
 
 ;;; THESE DEFINE A TREE DATA TYPE
 
@@ -205,20 +200,25 @@
 ;;; listing
 
 
-(define (longest-path-to-leaves-hash node-in)
+(define (longest-path-to-leaves-hash tree-in)
   (let ((hash (make-strong-eq-hash-table)))
-    (let longest-depth ((node node-in))
-      (hash-table/lookup
-       hash node
-       (lambda () hash-table-ref hash node)
-       (lambda ()
-        (let ((children (get-children node)))
-          (if (null? children)
-              (hash-table-set! hash node 0)
-              (hash-table-set!
-               hash node (+ 1 (apply max
-                                     (map longest-depth
-                                          children)))))))))
+    (let longest-depth ((tree tree-in))
+      (let ((node (tree:get-root tree)))
+	(hash-table/lookup
+	 hash node
+	 (lambda () hash-table-ref hash node)
+	 (lambda ()
+           (let ((children (tree:get-sub-trees tree)))
+	     (if (null? children)
+		 (begin
+		   (hash-table-set! hash node 0)
+		   0)
+		 (let ((value (+ 1 (apply
+				    max
+				    (map longest-depth
+					 children)))))
+		   (hash-table-set! hash node value)
+		   value)))))))
     hash))
 
 ; returns packages in load order, ie sorted by the depends relation
@@ -228,8 +228,7 @@
 (define (list-packages)
   (map car
        (sort (hash-table->alist
-             (longest-path-to-leaves-hash
-              (tree:get-root package-tree)))
+              (longest-path-to-leaves-hash package-tree))
             (lambda (p1 p2)
               (> (cdr p1) (cdr p2))))))
 
@@ -292,16 +291,19 @@ It's either not currently installed, or you're trying to uninstall root...")))))
 				   (write-line "farewell!")
 				   (ge calling-env)))
     (for-each (lambda (package)
-		(load (string-append "packages/objects/"
-				     (symbol->string (get-name package)))
+		(load (sanitize-pathstring
+		       (string-append "packages/definitions/"
+				      (symbol->string (get-name package))))
 		      game-env))
 	      packages)
     (symbol-definer 'clock (make-clock))
     (symbol-definer 'heaven (build '(place heaven)))
-    (let ((objects (build-package (tree:get-root package-tree) symbol-definer)))
+    (let ((objects (append-map (lambda (package)
+				 (build-package package symbol-definer))
+			       packages)))
       (symbol-definer 'all-people (filter person? objects))
       (symbol-definer 'my-avatar (build `(avatar ,name))))
-    (load "adventure-game-ui" game-env)
+    (load (sanitize-pathstring "adventure-game-ui") game-env)
     (ge game-env)
     (whats-here)))
 
