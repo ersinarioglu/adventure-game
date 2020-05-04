@@ -100,9 +100,8 @@
 
 
 ;;; Handler for build method
-(define (create-place args)
-  (let ((name (first args)))
-    (make-place 'name name)))
+(define (create-place name)
+    (make-place 'name name))
 
 (add-build-handler 'place create-place)
 
@@ -113,4 +112,4 @@
 	     'direction direction
 	     'to to))
 
-(add build-handler 'exit create-exit)
+(add-build-handler 'exit create-exit)
