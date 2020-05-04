@@ -4,8 +4,7 @@
 
 (define covid-19
   (create-package 'covid-19
-                '()
-                '()
-                '()))
+                  '()
+                  '()))
 
                 
