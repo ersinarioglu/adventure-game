@@ -257,6 +257,10 @@
           (else (display "\nOops, this package can't be uninstalled! 
 It's either not currently installed, or you're trying to uninstall root...")))))
 
+(define (list-things-to-build package-name)
+  (let ((package (find-package-by-name package-name)))
+    (display (get-things-to-build package))))
+
 ;;; GAME STATE
 
 #|

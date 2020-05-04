@@ -3,3 +3,5 @@
 		  '()
                   '(thing)
 		  '()))
+
+(append! all-packages (list interaction))
