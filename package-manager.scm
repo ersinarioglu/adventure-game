@@ -76,11 +76,6 @@
     (lambda (lst)
       (apply handler (cdr lst)))))
 
-(define (build-package package symbol-definer)
-  (let ((things-to-build (get-things-to-build package))
-	(build-method (get-build-method package)))
-    (build-method things-to-build symbol-definer)))
-
 ;;; THESE DEFINE A TREE DATA TYPE
 
 (define (empty-tree)
