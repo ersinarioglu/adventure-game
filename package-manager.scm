@@ -338,13 +338,13 @@
     (symbol-definer 'clock (make-clock))
     (symbol-definer 'heaven (build '(place heaven)))
 
-    (let ((objects (append-map
+    (let ((objects (apply append (map
 		    (lambda (package)
 		      (load (sanitize-pathstring
 			     (string-append "packages/build/"
 					    (symbol->string (get-name package))))
 			    game-env))
-		    packages)))
+		    packages))))
       (symbol-definer 'all-people (filter person? objects))
       (symbol-definer 'my-avatar (build `(avatar ,name))))
 
