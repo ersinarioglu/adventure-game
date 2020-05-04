@@ -188,8 +188,6 @@
 
   (define (populate-children-my-tree package)
     (populate-children my-tree package))
-	
-      
  
   (let loop ((leaves (list (find-root-package packages))))
     (set! new-leaves (list))
@@ -198,34 +196,7 @@
 	(loop new-leaves)
 	my-tree)))
 
-
-(define my-tree (make-tree-from-packages my-packages))
-
-
-
-
-(load "~/6.945/sdf/manager/load.scm")
-
-(manage 'new 'adventure-game)
-
-(make-tree-from-packages loaded-packages)
-    
-    
-
-
-
-
-
-
-
-
-(define my-tree (list 'world (list 'france
-				   (list 'paris))
-		      (list 'spain
-			    (list 'madrid))
-			    
-		      (list 'turkey
-			    (list 'ankara))))
+(define package-tree (make-tree-from-packages all-packages))
 
 
   
