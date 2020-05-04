@@ -116,6 +116,16 @@
   (find-tree-with-root-helper tree)
   result)
 	
+(define (tree:get-all-elements tree)
+  (define result (list))
+  (define (helper tree)
+    (if (not (eq? tree (empty-tree)))
+	(begin
+	  (set! result (cons (tree:get-root tree) result))
+	  (map helper (tree:get-sub-trees tree)))))
+  (helper tree)
+  result)
+
 ;; Adds given "new-tree" under node in "tree" that satisfies "predicate".
 (define (tree:add-tree-to-place! tree predicate new-tree)
   (let ((sub-tree (tree:find-tree-with-root tree predicate)))
@@ -160,10 +170,10 @@
 
 ;; Returns a new tree made from packages not including the package with
 ;; "package-name".
-(define (remove-package-from-tree package-name all-packages)
+(define (remove-package-from-tree tree package-name)
   (let ((excluded (filter (lambda (package)
 			    (not (eq? (get-name package) package-name)))
-			  all-packages)))
+			  (tree:get-all-elements tree))))
     (make-tree-from-packages excluded)))
 	 
 ;; packages is a list of packages
@@ -318,24 +328,35 @@
          (game-env (extend-top-level-environment calling-env)))
     (define (symbol-definer name value)
       (environment-define game-env name value))
+    
     (symbol-definer 'retire-game (lambda ()
 				   (write-line "farewell!")
 				   (ge calling-env)))
+    
     (for-each (lambda (package)
 		(load (sanitize-pathstring
 		       (string-append "packages/definitions/"
 				      (symbol->string (get-name package))))
 		      game-env))
 	      packages)
+
+    ;(ge game-env)
+    
     (symbol-definer 'clock (make-clock))
     (symbol-definer 'heaven (build '(place heaven)))
+
     (let ((objects (append-map (lambda (package)
-				 (build-package package symbol-definer))
+				 (eval '(build-package package symbol-definer)
+				       (extend-top-level-environment
+					game-env
+					'(symbol-definer package)
+					(list symbol-definer package))))
 			       packages)))
       (symbol-definer 'all-people (filter person? objects))
       (symbol-definer 'my-avatar (build `(avatar ,name))))
+
     (load (sanitize-pathstring "adventure-game-ui") game-env)
-    (ge game-env)
+    
     (whats-here)))
 
 ;;; UI OPENING ANNOUNCEMENT

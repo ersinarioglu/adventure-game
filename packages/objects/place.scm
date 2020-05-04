@@ -3,7 +3,7 @@
 ;;; Gretchen Eggers, Ersin Arioglu, Nick Janovetz
 
 ;;; Place package
-(define all-places-to-build
+(define all-places-names
   (list 'great-dome
    'little-dome
    'lobby-10
@@ -25,12 +25,19 @@
 
 (define place
   (create-package 'place
-                  (map (lambda (args) `(place ,args))
-		       all-places-to-build)
+                  (map (lambda (args)
+			 (lambda ()
+			   `(place ,args)))
+		       all-places-names)
                   (list 'rules 'mobile-thing 'stationary-thing)
                   (list 'container)
 		  (lambda (things-to-build symbol-definer)
-		    (let ((places (map build things-to-build)))
+		    (let ((places (map (lambda (thunk)
+					 (build (thunk)))
+				       things-to-build)))
+		      (for-each (lambda (name obj)
+				  (symbol-definer name obj))
+				all-places-names places)
 		      (symbol-definer 'all-places places)
 		      places))))
                    

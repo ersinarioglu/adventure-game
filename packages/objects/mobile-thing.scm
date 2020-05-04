@@ -4,7 +4,10 @@
 
 (define mobile-thing
   (create-package 'mobile-thing
-                  '((mobile-thing engineering-book))
+                  (map (lambda (args)
+			 (lambda ()
+			   `(mobile-thing ,args)))
+		       '(sicp engineering-book recitation-problem))
                   (list 'people)
                   (list 'place)))
 

@@ -4,13 +4,12 @@
 
 (define can-see-both-ways
   (create-package 'can-see-both-ways
-                  (map (lambda (args) `(can-see-both-ways ,@args))
-		       '((32D 32G)
-                         (great-dome little-dome)
-                         (lobby-10 infinite)
-                         (lobby-7 infinite)
-                         (infinite bldg-26)
-                         (lobby-10 lobby-7)))
+                  (list (lambda () ('can-see-both-ways 32d 32g))
+                        (lambda () ('can-see-both-ways great-dome little-dome))
+                        (lambda () ('can-see-both-ways lobby-10 infinite))
+                        (lambda () ('can-see-both-ways lobby-7 infinite))
+                        (lambda () ('can-see-both-ways infinite bldg-26))
+                        (lambda () ('can-see-both-ways lobby-10 lobby-7)))
                   '()
                   (list 'can-see)))
 

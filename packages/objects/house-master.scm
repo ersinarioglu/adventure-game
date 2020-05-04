@@ -4,9 +4,10 @@
 
 (define house-master
   (create-package 'house-master
-                  (map (lambda (args) `(house-master ,@args))
-		       '((dr-evil)
-			 (mr-bigglesworth)))
+                  (list (lambda (args)
+			  (lambda ()
+			    `(house-master ,args)))
+			'(dr-evil mr-bigglesworth))
                   '()
                   (list 'autonomous-agent)))
 

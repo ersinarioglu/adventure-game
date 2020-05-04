@@ -4,7 +4,9 @@
 
 (define student
   (create-package 'student
-                  (map (lambda (args) `(student ,args))
+                  (map (lambda (args)
+			 (lambda ()
+			   `(student ,args)))
 		       '(ben-bitdiddle
                          alyssa-hacker
                          course-6-frosh
