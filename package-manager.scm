@@ -342,10 +342,14 @@
 
     (let ((objects (apply append (map
 		    (lambda (package)
-		      (load (sanitize-pathstring
-			     (string-append "packages/build/"
-					    (symbol->string (get-name package))))
-			    game-env))
+		      (let ((obj-lst
+			     (load (sanitize-pathstring
+				    (string-append "packages/build/"
+						   (symbol->string (get-name package))))
+				   game-env)))
+			(if (list? obj-lst)
+			    obj-lst
+			    '())))
 		    packages))))
       (symbol-definer 'all-people (filter person? objects))
       (symbol-definer 'my-avatar (build `(avatar ,name))))
