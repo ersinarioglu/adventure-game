@@ -126,7 +126,7 @@
 ;; Adds given "new-tree" under node in "tree" that satisfies "predicate".
 (define (tree:add-tree-to-place! tree predicate new-tree)
   (let ((sub-tree (tree:find-tree-with-root tree predicate)))
-    (if subtree
+    (if sub-tree
 	(append! sub-tree (list new-tree))
 	#f)))
 
@@ -166,27 +166,117 @@
 ;; packages is a list of packages
 
 (define (make-tree-from-packages packages)
-  (define my-tree (list (get-root-package packages)))
+  (define my-tree (list (find-root-package packages)))
+
+
+  (define new-leaves (list))
+
+  (define (get-child-packages package)
+    (define (helper package-name)
+      (find-package-in-list packages package-name))
+    (map helper (get-children package)))
 
   ;; Adds the children of a given "package" to "tree" if "package" is in "tree"
   (define (populate-children tree package)
-    (add-list-of-packages-to-subtree! tree (get-name package)
-				      (get-children package)))
+    (let ((child-packages (get-child-packages package)))
+      (add-list-of-packages-to-subtree! tree (get-name package)
+					child-packages)
+      (append! new-leaves child-packages)))
 
   (define (populate-children-my-tree package)
     (populate-children my-tree package))
+	
+      
  
-  (let loop ((leaves (list (get-root-package packages))))
+  (let loop ((leaves (list (find-root-package packages))))
+    (set! new-leaves (list))
     (map populate-children-my-tree leaves)
-    (let ((new-leaves (map get-children leaves)))
-      (if (> (length new-leaves 0))
-	  (loop new-leaves)))))
+    (if (> (length new-leaves) 0)
+	(loop new-leaves)
+	my-tree)))
+
+
+(make-tree-from-packages my-packages)
+
+;;;; INTERIM
+
+
+(define package:things-to-build
+  (make-property 'things-to-build
+                 'predicate list?
+                 'default-value '()))
+
+(define package:children
+  (make-property 'children
+                 'predicate list?
+                 'default-value '()))
+
+(define package:build-method
+  (make-property 'build-method
+		 'predicate procedure?
+		 'default-value (lambda (things-to-build symbol-definer)
+				  (map build things-to-build))))
+
+(define package?
+  (make-type 'package (list package:things-to-build
+			    package:children
+			    package:build-method)))
+(set-predicate<=! package? object?)
+
+(define make-package
+  (type-instantiator package?))
+
+(define (create-package name things-to-build children #!optional build-method)
+  (let ((created-package
+	 (if (default-object? build-method)
+	     (make-package 'name name
+			   'things-to-build things-to-build
+			   'children children)
+	     (make-package 'name name
+			   'things-to-build things-to-build
+			   'children children
+			   'build-method build-method))))
+    created-package))
+
+(define get-things-to-build
+  (property-getter package:things-to-build package?))
+
+(define add-thing-to-build!
+  (property-adder package:things-to-build package? object?))
+
+(define set-things-to-build!
+  (property-setter package:things-to-build package? (is-list-of object?)))
+
+(define get-children
+  (property-getter package:children package?))
+
+(define add-child!
+  (property-adder package:children package? package?))
+
+(define set-children!
+  (property-setter package:children package? (is-list-of package?)))
+
+(define get-build-method
+  (property-getter package:build-method package?))
+
+(define my-packages (list (create-package 'root
+					'()
+					(list 'a))
+			  (create-package 'a
+					'()
+					'())))
 
 
 
 
+;;;;; INTERIM
 
-  
+
+(load "~/6.945/sdf/manager/load.scm")
+
+(manage 'new 'adventure-game)
+
+(make-tree-from-packages loaded-packages)
     
     
 
