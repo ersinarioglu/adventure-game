@@ -115,6 +115,12 @@
 	    (map find-tree-with-root-helper (tree:get-sub-trees tree)))))
   (find-tree-with-root-helper tree)
   result)
+	
+
+
+
+
+    
 
 
 
@@ -147,6 +153,8 @@
   (tree:find-tree-with-root tree (lambda (package)
 				   (eq? (get-name package) package-name))))
 
+;; Adds "object" in "tree", under node that has package name
+;; "root-package-name".
 (define (add-object-to-subtree-with-root-package! tree root-package-name
 					   object)
   (tree:add-object-to-place! tree (lambda (package)
@@ -157,6 +165,14 @@
   (define (helper object)
     (add-object-to-subtree-with-root-package! tree root-package-name object))
   (map helper objects))
+
+;; Returns a new tree made from packages not including the package with
+;; "package-name".
+(define (remove-package-from-tree package-name all-packages)
+  (let ((excluded (filter (lambda (package)
+			    (not (eq? (get-name package) package-name)))
+			  all-packages)))
+    (make-tree-from-packages excluded)))
 	 
 ;; packages is a list of packages
 
