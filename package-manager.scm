@@ -174,14 +174,17 @@
   (define (get-child-packages package)
     (define (helper package-name)
       (find-package-in-list packages package-name))
+    (display (get-children package))
     (map helper (get-children package)))
+
 
   ;; Adds the children of a given "package" to "tree" if "package" is in "tree"
   (define (populate-children tree package)
     (let ((child-packages (get-child-packages package)))
       (add-list-of-packages-to-subtree! tree (get-name package)
 					child-packages)
-      (append! new-leaves child-packages)))
+      
+      (set! new-leaves (append! new-leaves child-packages))))
 
   (define (populate-children-my-tree package)
     (populate-children my-tree package))
@@ -196,80 +199,9 @@
 	my-tree)))
 
 
-(make-tree-from-packages my-packages)
-
-;;;; INTERIM
+(define my-tree (make-tree-from-packages my-packages))
 
 
-(define package:things-to-build
-  (make-property 'things-to-build
-                 'predicate list?
-                 'default-value '()))
-
-(define package:children
-  (make-property 'children
-                 'predicate list?
-                 'default-value '()))
-
-(define package:build-method
-  (make-property 'build-method
-		 'predicate procedure?
-		 'default-value (lambda (things-to-build symbol-definer)
-				  (map build things-to-build))))
-
-(define package?
-  (make-type 'package (list package:things-to-build
-			    package:children
-			    package:build-method)))
-(set-predicate<=! package? object?)
-
-(define make-package
-  (type-instantiator package?))
-
-(define (create-package name things-to-build children #!optional build-method)
-  (let ((created-package
-	 (if (default-object? build-method)
-	     (make-package 'name name
-			   'things-to-build things-to-build
-			   'children children)
-	     (make-package 'name name
-			   'things-to-build things-to-build
-			   'children children
-			   'build-method build-method))))
-    created-package))
-
-(define get-things-to-build
-  (property-getter package:things-to-build package?))
-
-(define add-thing-to-build!
-  (property-adder package:things-to-build package? object?))
-
-(define set-things-to-build!
-  (property-setter package:things-to-build package? (is-list-of object?)))
-
-(define get-children
-  (property-getter package:children package?))
-
-(define add-child!
-  (property-adder package:children package? package?))
-
-(define set-children!
-  (property-setter package:children package? (is-list-of package?)))
-
-(define get-build-method
-  (property-getter package:build-method package?))
-
-(define my-packages (list (create-package 'root
-					'()
-					(list 'a))
-			  (create-package 'a
-					'()
-					'())))
-
-
-
-
-;;;;; INTERIM
 
 
 (load "~/6.945/sdf/manager/load.scm")
@@ -295,30 +227,11 @@
 		      (list 'turkey
 			    (list 'ankara))))
 
-(define (longest-path-to-leaves-hash node-in)
-  (let ((hash (make-strong-eq-hash-table)))
-    (let longest-depth ((node node-in))
-      (hash-table/lookup
-       node
-       (lambda () hash-table-ref hash node)
-       (lambda ()
-	 (let ((children (get-children node)))
-	   (if (null? children)
-	       (hash-table-set! hash node 0)
-	       (hash-table-set!
-		hash node (+ 1 (apply max
-				      (map longest-depth
-					   children)))))))))
-    hash))
 
-; returns packages in load order, ie sorted by the depends relation
+  
+;;; list packages must return packages in depth first order!
 (define (list-packages)
-  (map car
-       (sort (hash-table->alist
-	      (longest-path-to-leaves-hash
-	       (tree:get-root package-tree)))
-	     (lambda (p1 p2)
-	       (> (cdr p1) (cdr p2))))))
+  ())
 
 (define (find-package-by-name package-name)
   (find (lambda (package)
@@ -327,29 +240,14 @@
 (define (install-package! point-of-install new-package)
   (let ((parent (find-package-by-name point-of-install))
         (child (find-package-by-name new-package)))
-    (cond ((and parent child) (add-child! parent new-package)
+    (cond ((and parent child) (add-child! parent child)
                   (display "\nInstallation successful."))
           ((and parent (not child)) (display "\nOops, the package you're trying to install doesn't exist."))
           ((and (not parent) child) (display "\nOops, the point of installation doesn't exist- try listing the packages to see which packages are currently installed."))
           (else (display "\nNeither of those packages exist."))
           )))
 
-(define (uninstall-package! package-name)
-  (let ((parent (find-package-by-name (get-parent package-name)))
-        (children (get-subtree-with-root-package package-tree package-name)))
-    (cond ((parent)
-           (cond ((children)
-                  (display (list package-name "was uninstalled along with all children:" children))
-                  (remove-child parent package-name))
-                 (else
-                  (display (list package-name "was uninstalled and had no children"))
-                  (remove-child parent package-name))))
-          (else (display "\nOops, this package can't be uninstalled! 
-It's either not currently installed, or you're trying to uninstall root...")))))
-
-(define (list-things-to-build package-name)
-  (let ((package (find-package-by-name package-name)))
-    (display (get-things-to-build package))))
+(define (uninstall-package! package-name) () )
 
 ;;; GAME STATE
 
@@ -357,6 +255,22 @@ It's either not currently installed, or you're trying to uninstall root...")))))
 use environment-define to assign values built by 
 build to symbols in the game environment
 |#
+
+(define clock)
+(define all-places)
+(define heaven)
+(define all-people)
+(define my-avatar)
+
+(define (lowlevel-start-adventure name)
+  (set! clock (make-clock))
+  (set! all-places (build-game))
+  (set! heaven (create-place 'heaven))
+  (set! all-people (build-people all-places))
+  (set! my-avatar
+        (create-avatar name
+                       (random-choice all-places)))
+  (whats-here))
         
 (define (start-adventure name)
   (let* ((packages (list-packages))
