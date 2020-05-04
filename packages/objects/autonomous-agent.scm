@@ -4,7 +4,6 @@
 
 (define autonomous-agent
   (create-package 'autonomous-agent
-                  '()
                   (list 'avatar 'troll 'student 'house-master)
                   (list 'people)))
 

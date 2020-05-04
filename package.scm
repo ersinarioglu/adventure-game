@@ -2,61 +2,32 @@
 (define all-packages '())
 
 ;;; Package type definition
-(define package:things-to-build
-  (make-property 'things-to-build
-                 'predicate (is-list-of procedure?)
-                 'default-value '()))
 
 (define package:children
   (make-property 'children
                  'predicate (is-list-of symbol?)
                  'default-value '()))
 
-(define package:build-method
-  (make-property 'build-method
-		 'predicate procedure?
-		 'default-value (lambda (things-to-build symbol-definer)
-				  (map (lambda (thunk)
-					 (build (thunk)))
-				       things-to-build))))
 (define package:parent
   (make-property 'parent
                  'predicate symbol?
                  'default-value '()))
 
 (define package?
-  (make-type 'package (list package:things-to-build
-			    package:children
-			    package:build-method
+  (make-type 'package (list package:children
                             package:parent)))
 (set-predicate<=! package? object?)
 
 (define make-package
   (type-instantiator package?))
 
-(define (create-package name things-to-build children parent #!optional build-method)
+(define (create-package name children parent)
   (let ((created-package
-	 (if (default-object? build-method)
-	     (make-package 'name name
-			   'things-to-build things-to-build
-			   'children children
-                           'parent parent)
-	     (make-package 'name name
-			   'things-to-build things-to-build
-			   'children children
-                           'parent parent
-			   'build-method build-method))))
+	 (make-package 'name name
+		       'children children
+		       'parent parent)))
     (set! all-packages (cons created-package all-packages))
     created-package))
-
-(define get-things-to-build
-  (property-getter package:things-to-build package?))
-
-(define add-thing-to-build!
-  (property-adder package:things-to-build package? object?))
-
-(define set-things-to-build!
-  (property-setter package:things-to-build package? (is-list-of object?)))
 
 (define get-children
   (property-getter package:children package?))
@@ -69,9 +40,6 @@
 
 (define remove-child
   (property-remover package:children package? symbol?))
-
-(define get-build-method
-  (property-getter package:build-method package?))
 
 (define get-parent
   (property-getter package:parent package?))

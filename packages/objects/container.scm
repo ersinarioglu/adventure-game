@@ -5,7 +5,6 @@
 ;;; Container package
 (define container
   (create-package 'container
-                  '()
                   (list 'place)
                   (list 'thing)))
 
