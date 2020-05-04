@@ -185,8 +185,6 @@
 
   (define (populate-children-my-tree package)
     (populate-children my-tree package))
-	
-      
  
   (let loop ((leaves (list (find-root-package packages))))
     (set! new-leaves (list))
@@ -195,7 +193,7 @@
 	(loop new-leaves)
 	my-tree)))
 
-(define package-tree (make-tree-from-packages loaded-packages))
+(define package-tree (make-tree-from-packages all-packages))
 
 ;; Tree Listing
 
