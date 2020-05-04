@@ -376,7 +376,7 @@
 		  (string-append "packages/build/"
 				(symbol->string (get-name package)))))
 	       packages)))
-
+    
     (let ((conflicting-definers
 	   (conflicts (make-by-name-index
 		       (map (lambda (file)
@@ -385,7 +385,8 @@
       (if (null? conflicting-definers)
 	  'ok
 	  (error "conflicts:" conflicting-definers)))
-								   
+    
+    (load (sanitize-pathstring "package-substrate") game-env)
     
     (define (symbol-definer name value)
       (environment-define game-env name value))
@@ -395,7 +396,7 @@
 				   (ge calling-env)))
     
     (for-each (lambda (definer) (load definer game-env)) definitions-filenames)
-
+    
     (symbol-definer 'the-clock (make-clock))
     (symbol-definer 'heaven (build '(place heaven)))
 
