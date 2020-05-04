@@ -5,6 +5,6 @@
 (define house-master
   (create-package 'house-master
                   '()
-                  (list 'autonomous-agent)))
+                  'autonomous-agent))
 
 

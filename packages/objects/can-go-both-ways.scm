@@ -5,6 +5,6 @@
 (define can-go-both-ways
   (create-package 'can-go-both-ways
                   '()
-                  (list 'movement-rules)))
+                  'movement-rules))
 
 

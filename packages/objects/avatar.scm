@@ -5,6 +5,6 @@
 (define avatar
   (create-package 'avatar
                   '()
-                  (list 'autonomous-agent)))
+                  'autonomous-agent))
 
 

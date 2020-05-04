@@ -5,7 +5,7 @@
 (define thing
   (create-package 'thing
                   (list 'container)
-                  (list 'root)))
+                  'root))
 
 (load "adventure-game/packages/objects/container") 
 

@@ -169,7 +169,7 @@
   (let ((excluded (filter (lambda (package)
 			    (not (eq? (get-name package) package-name)))
 			  (tree:get-all-elements tree))))
-    (make-tree-from-packages excluded)))
+    (set! package-tree (make-tree-from-packages excluded))))
 	 
 ;; packages is a list of packages
 
@@ -182,7 +182,6 @@
   (define (get-child-packages package)
     (define (helper package-name)
       (find-package-in-list packages package-name))
-    (display (get-children package))
     (map helper (get-children package)))
 
 
@@ -292,9 +291,10 @@
                  (children (get-subtree-with-root-package package-tree the-package)))
     
              (cond ((not (null? parent-name))
+                    (display parent-name)
                     (remove-child (find-package-by-name parent-name) package-name)
                     (remove-parent the-package '())
-                    ;; tree remove proc goes here
+                    (remove-package-from-tree package-tree package-name)
                     (cond (children
                            (display package-name)
                            (display " was uninstalled along with all of its children."))
@@ -359,7 +359,9 @@
 (display "Welcome to the adventure game package manager!\n")
 (display "Here's a few commands to get you started:\n\n")
 (display  "---------------------------------------------------------------\n\n")
-(display  "'list-packages' : returns the names of all currently installed packages\n\n")
-(display  "'install-package! [parent-package] [new-package]' : \ninstalls new packages as children of parent package\n\n")
-(display "'uninstall-package! [package]' : \nuninstalls package and all of the package's children, if it exists and is currently installed\n\n") 
-(display "'start-adventure [your-name]' : begins an adventure in a world with all currently installed packages")
+(display  "(list-installed-packages) : Returns the names of all currently installed packages.\n\n")
+(display  "(list-all-packages) : Returns the names of all packages the manager can see.
+Packages that are visible but not installed are marked with an asterisk. \n\n")
+(display  "(install-package! [parent-package] [new-package]) : \nInstalls a new package as a child of parent package.\n\n")
+(display "(uninstall-package! [package]) : \nUninstalls package and all of the package's children, if it exists and is currently installed.\n\n") 
+(display "(start-adventure [your-name]) : \nBegins an adventure in a world with all currently installed packages.")

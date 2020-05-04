@@ -5,6 +5,6 @@
 (define student
   (create-package 'student
                   '()
-                  (list 'autonomous-agent)))
+                  'autonomous-agent))
 
 

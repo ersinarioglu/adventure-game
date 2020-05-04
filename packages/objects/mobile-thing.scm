@@ -5,7 +5,7 @@
 (define mobile-thing
   (create-package 'mobile-thing
                   (list 'people)
-                  (list 'place)))
+                  'place))
 
 
 (load "adventure-game/packages/objects/people")
