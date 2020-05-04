@@ -76,3 +76,6 @@
 
 (define set-parent!
   (property-setter package:parent package? symbol?))
+
+(define remove-parent
+  (property-setter package:parent package? null?))

@@ -33,15 +33,16 @@
 	    (> (length (cdr name-definers-pair)) 1))
 	  (hash-table->alist by-name-index)))
 
-(let ((here (directory-pathname (current-load-pathname))))
-  (for-each (lambda (package-object-pathname)
-	      (load (->namestring package-object-pathname)))
-	    (filter (lambda (pn)
-		      (not (string-prefix? "." (pathname-name pn))))
-	     (directory-read (->namestring
-			      (merge-pathnames
-			       (->pathname "packages/objects/custom/")
-			       here))))))
+(define directory-path (directory-pathname (current-load-pathname)))
+
+(define (sanitize-pathstring pathstring)
+    (->namestring (merge-pathnames (->pathname pathstring) directory-path)))
+
+(for-each (lambda (package-object-pathname)
+	    (load (->namestring package-object-pathname)))
+	  (filter (lambda (pn)
+		    (not (string-prefix? "." (pathname-name pn))))
+		  (directory-read (sanitize-pathstring "packages/objects/custom/"))))
 
 
 ;;; Building default package
@@ -77,14 +78,8 @@
 
 (define (build-package package symbol-definer)
   (let ((things-to-build (get-things-to-build package))
-	(children (get-children package))
 	(build-method (get-build-method package)))
-    (append (build-method-package things-to-build symbol-definer)
-	    (reduce-left append '()
-			 (map (lambda (child)
-				(build-package child symbol-definer))
-			      children)))))
-
+    (build-method things-to-build symbol-definer)))
 
 ;;; THESE DEFINE A TREE DATA TYPE
 
@@ -218,35 +213,28 @@
   (find (lambda (package)
 	  (eq? (get-name package) package-name)) all-packages))
 
-(define (install-package! point-of-install new-package)
-  (let ((parent (find-package-by-name point-of-install))
-        (child (find-package-by-name new-package)))
-    (cond ((and parent child) (add-child! parent child)
-                  (display "\nInstallation successful."))
-          ((and parent (not child)) (display "\nOops, the package you're trying to install doesn't exist."))
-          ((and (not parent) child) (display "\nOops, the point of installation doesn't exist- try listing the packages to see which packages are currently installed."))
-          (else (display "\nNeither of those packages exist."))
-          )))
-
-(define (uninstall-package! package-name) () )
-
 ;;; listing
 
 
-(define (longest-path-to-leaves-hash node-in)
+(define (longest-path-to-leaves-hash tree-in)
   (let ((hash (make-strong-eq-hash-table)))
-    (let longest-depth ((node node-in))
-      (hash-table/lookup
-       hash node
-       (lambda () hash-table-ref hash node)
-       (lambda ()
-        (let ((children (get-children node)))
-          (if (null? children)
-              (hash-table-set! hash node 0)
-              (hash-table-set!
-               hash node (+ 1 (apply max
-                                     (map longest-depth
-                                          children)))))))))
+    (let longest-depth ((tree tree-in))
+      (let ((node (tree:get-root tree)))
+	(hash-table/lookup
+	 hash node
+	 (lambda () hash-table-ref hash node)
+	 (lambda ()
+           (let ((children (tree:get-sub-trees tree)))
+	     (if (null? children)
+		 (begin
+		   (hash-table-set! hash node 0)
+		   0)
+		 (let ((value (+ 1 (apply
+				    max
+				    (map longest-depth
+					 children)))))
+		   (hash-table-set! hash node value)
+		   value)))))))
     hash))
 
 ; returns packages in load order, ie sorted by the depends relation
@@ -256,24 +244,48 @@
 (define (list-packages)
   (map car
        (sort (hash-table->alist
-             (longest-path-to-leaves-hash
-              (tree:get-root package-tree)))
+              (longest-path-to-leaves-hash package-tree))
             (lambda (p1 p2)
               (> (cdr p1) (cdr p2))))))
 
 
+(define (install-package! point-of-install new-package)
+  (let ((parent (find-package-by-name point-of-install))
+        (child (find-package-by-name new-package)))
+
+    (cond ((and parent child)
+           ((add-child! parent new-package)
+            (set-parent! child point-of-install)
+            (add-object-to-subtree-with-root-package! package-tree point-of-install child)
+            (display "\nInstallation successful.")))
+
+          ((and parent (not child))
+           (display "\nOops, the package you're trying to install doesn't exist."))
+
+          ((and (not parent) child)
+           (display "\nOops, the point of installation doesn't exist- try listing the packages to see which packages are currently installed."))
+
+          (else (display "\nNeither of those packages exist."))
+          )))
+
+
 (define (uninstall-package! package-name)
-  (let ((parent (get-parent (find-package-by-name package-name)))
+  (let* ((the-package (find-package-by-name package-name))
+        (parent-name (get-parent the-package))
         (children (get-subtree-with-root-package package-tree package-name)))
-    (cond (parent
-           (cond (children
-                  (display (list package-name "was uninstalled along with all children:" children))
-                  (remove-child parent package-name))
-                 (else
-                  (display (list package-name "was uninstalled and had no children"))
-                  (remove-child parent package-name))))
+    
+    (cond (parent-name
+           ((remove-child (find-package-by-name parent-name) package-name)
+            (remove-parent the-package '())
+            ;; tree remove proc goes here
+            (cond (children
+                  (display (list package-name " was uninstalled along with all children.")))
+                  (else
+                  (display (list package-name "was uninstalled and had no children"))))))
+
           (else (display "\nOops, this package can't be uninstalled! 
 It's either not currently installed, or you're trying to uninstall root...")))))
+
 
 (define (list-things-to-build package-name)
   (let ((package (find-package-by-name package-name)))
@@ -295,16 +307,19 @@ It's either not currently installed, or you're trying to uninstall root...")))))
 				   (write-line "farewell!")
 				   (ge calling-env)))
     (for-each (lambda (package)
-		(load (string-append "packages/objects/"
-				     (symbol->string (get-name package)))
+		(load (sanitize-pathstring
+		       (string-append "packages/definitions/"
+				      (symbol->string (get-name package))))
 		      game-env))
 	      packages)
     (symbol-definer 'clock (make-clock))
     (symbol-definer 'heaven (build '(place heaven)))
-    (let ((objects (build-package (tree:get-root package-tree) symbol-definer)))
+    (let ((objects (append-map (lambda (package)
+				 (build-package package symbol-definer))
+			       packages)))
       (symbol-definer 'all-people (filter person? objects))
       (symbol-definer 'my-avatar (build `(avatar ,name))))
-    (load "adventure-game-ui" game-env)
+    (load (sanitize-pathstring "adventure-game-ui") game-env)
     (ge game-env)
     (whats-here)))
 
