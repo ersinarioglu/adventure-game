@@ -4,7 +4,7 @@
 ;;; Package type definition
 (define package:things-to-build
   (make-property 'things-to-build
-                 'predicate (is-list-of object?)
+                 'predicate (is-list-of procedure?)
                  'default-value '()))
 
 (define package:children
@@ -16,7 +16,9 @@
   (make-property 'build-method
 		 'predicate procedure?
 		 'default-value (lambda (things-to-build symbol-definer)
-				  (map build things-to-build))))
+				  (map (lambda (thunk)
+					 (build (thunk)))
+				       things-to-build))))
 (define package:parent
   (make-property 'parent
                  'predicate symbol?

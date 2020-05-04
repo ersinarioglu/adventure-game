@@ -290,21 +290,27 @@ It's either not currently installed, or you're trying to uninstall root...")))))
     (symbol-definer 'retire-game (lambda ()
 				   (write-line "farewell!")
 				   (ge calling-env)))
+    
     (for-each (lambda (package)
 		(load (sanitize-pathstring
 		       (string-append "packages/definitions/"
 				      (symbol->string (get-name package))))
 		      game-env))
 	      packages)
+
+    (ge game-env)
+    
     (symbol-definer 'clock (make-clock))
     (symbol-definer 'heaven (build '(place heaven)))
+
     (let ((objects (append-map (lambda (package)
 				 (build-package package symbol-definer))
 			       packages)))
       (symbol-definer 'all-people (filter person? objects))
       (symbol-definer 'my-avatar (build `(avatar ,name))))
+
     (load (sanitize-pathstring "adventure-game-ui") game-env)
-    (ge game-env)
+    
     (whats-here)))
 
 ;;; UI ANNOUNCEMENT

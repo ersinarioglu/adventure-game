@@ -4,11 +4,10 @@
 
 (define stationary-thing
   (create-package 'stationary-thing
-		  (map (lambda (args) `(thing ,args))
-		       '((black-board 10-250)
-                         (lovely-trees great-court)
-                         (flag-pole great-court)
-                         (calder-sculpture the-dot)))
+		  (list (lambda () ('thing 'black-board 10-250))
+                        (lambda () ('thing 'lovely-trees great-court))
+                        (lambda () ('thing 'flag-pole great-court))
+                        (lambda () ('thing 'calder-sculpture the-dot)))
                   '()
                   (list 'place)))
 
