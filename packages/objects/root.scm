@@ -6,7 +6,6 @@
 
 (define root
   (create-package 'root  ;name
-                  '()    ;things to build
                   (list 'thing)    ;children
                   '()))  ;parent
 

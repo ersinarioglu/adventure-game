@@ -4,7 +4,6 @@
 
 (define visibility-rules
   (create-package 'visibility-rules
-                  '()
                   (list 'can-see)
                   (list 'rules)))
 
