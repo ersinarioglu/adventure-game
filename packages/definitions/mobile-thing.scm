@@ -30,8 +30,8 @@
     (constant-generic-procedure-handler #f)))
 
 ;;; Handler for build method
-(define (create-mobile-thing name location)
+(define (create-mobile-thing name)
   (make-mobile-thing 'name name
-		     'location location))
+		     'location (random-choice all-places)))
 
 (add-build-handler 'mobile-thing create-mobile-thing)
