@@ -174,14 +174,17 @@
   (define (get-child-packages package)
     (define (helper package-name)
       (find-package-in-list packages package-name))
+    (display (get-children package))
     (map helper (get-children package)))
+
 
   ;; Adds the children of a given "package" to "tree" if "package" is in "tree"
   (define (populate-children tree package)
     (let ((child-packages (get-child-packages package)))
       (add-list-of-packages-to-subtree! tree (get-name package)
 					child-packages)
-      (append! new-leaves child-packages)))
+      
+      (set! new-leaves (append! new-leaves child-packages))))
 
   (define (populate-children-my-tree package)
     (populate-children my-tree package))
@@ -195,7 +198,24 @@
 
 (define package-tree (make-tree-from-packages all-packages))
 
-;; Tree Listing
+(define (find-package-by-name package-name)
+  (find (lambda (package)
+	  (eq? (get-name package) package-name)) all-packages))
+
+(define (install-package! point-of-install new-package)
+  (let ((parent (find-package-by-name point-of-install))
+        (child (find-package-by-name new-package)))
+    (cond ((and parent child) (add-child! parent child)
+                  (display "\nInstallation successful."))
+          ((and parent (not child)) (display "\nOops, the package you're trying to install doesn't exist."))
+          ((and (not parent) child) (display "\nOops, the point of installation doesn't exist- try listing the packages to see which packages are currently installed."))
+          (else (display "\nNeither of those packages exist."))
+          )))
+
+(define (uninstall-package! package-name) () )
+
+;;; listing
+
 
 (define (longest-path-to-leaves-hash node-in)
   (let ((hash (make-strong-eq-hash-table)))
@@ -204,37 +224,27 @@
        node
        (lambda () hash-table-ref hash node)
        (lambda ()
-	 (let ((children (get-children node)))
-	   (if (null? children)
-	       (hash-table-set! hash node 0)
-	       (hash-table-set!
-		hash node (+ 1 (apply max
-				      (map longest-depth
-					   children)))))))))
+        (let ((children (get-children node)))
+          (if (null? children)
+              (hash-table-set! hash node 0)
+              (hash-table-set!
+               hash node (+ 1 (apply max
+                                     (map longest-depth
+                                          children)))))))))
     hash))
 
 ; returns packages in load order, ie sorted by the depends relation
+
+  
+;;; list packages must return packages in depth first order!
 (define (list-packages)
   (map car
        (sort (hash-table->alist
-	      (longest-path-to-leaves-hash
-	       (tree:get-root package-tree)))
-	     (lambda (p1 p2)
-	       (> (cdr p1) (cdr p2))))))
+             (longest-path-to-leaves-hash
+              (tree:get-root package-tree)))
+            (lambda (p1 p2)
+              (> (cdr p1) (cdr p2))))))
 
-(define (find-package-by-name package-name)
-  (find (lambda (package)
-	  (eq? (get-name package) package-name)) all-packages))
-
-(define (install-package! point-of-install new-package)
-  (let ((parent (find-package-by-name point-of-install))
-        (child (find-package-by-name new-package)))
-    (cond ((and parent child) (add-child! parent new-package)
-                  (display "\nInstallation successful."))
-          ((and parent (not child)) (display "\nOops, the package you're trying to install doesn't exist."))
-          ((and (not parent) child) (display "\nOops, the point of installation doesn't exist- try listing the packages to see which packages are currently installed."))
-          (else (display "\nNeither of those packages exist."))
-          )))
 
 (define (uninstall-package! package-name)
   (let ((parent (get-parent (find-package-by-name package-name)))
@@ -253,16 +263,12 @@ It's either not currently installed, or you're trying to uninstall root...")))))
   (let ((package (find-package-by-name package-name)))
     (display (get-things-to-build package))))
 
+
 (define (add-new-thing! package-name thing-to-build-name)
   ())
 
 ;;; GAME STATE
 
-#|
-use environment-define to assign values built by 
-build to symbols in the game environment
-|#
-        
 (define (start-adventure name)
   (let* ((packages (list-packages))
 	 (calling-env (nearest-repl/environment))
