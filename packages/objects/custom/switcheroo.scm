@@ -1,4 +1,4 @@
-(define swticheroos-to-build
+(define switcheroos-to-build
   '(electronic-doohickey shiny-metallic-ball))
 
 (define switcheroo
@@ -7,6 +7,7 @@
 			 `(switcheroo-button ,args))
 		       switcheroos-to-build)
 		  '()
+                  '()
 		  (lambda (things-to-build symbolic-definer)
 		    (let ((objects (map build things-to-build)))
 		      (set-switcheroo-instance (first objects) (second objects))
