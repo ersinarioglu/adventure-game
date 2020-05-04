@@ -221,7 +221,7 @@
   (let ((hash (make-strong-eq-hash-table)))
     (let longest-depth ((node node-in))
       (hash-table/lookup
-       node
+       hash node
        (lambda () hash-table-ref hash node)
        (lambda ()
         (let ((children (get-children node)))
