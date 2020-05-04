@@ -4,7 +4,7 @@
 
 ;;; Handler for build method
 
-(define (can-see-both-ways args)
+(define (can-see-both-ways a b)
   (can-see a b)
   (can-see b a))
 

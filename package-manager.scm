@@ -11,7 +11,7 @@
 
 (define (summary-file summary) (cadr (assq 'filename summary)))
 (define (summary-free summary) (cadr (assq 'free summary)))
-(define (summary-bound summary) (cadr (assq 'bound summary)))
+(define (summary-bound summary) (cadr (assq 'defined summary)))
 
 (define (make-by-name-index summaries)
   (let ((index (make-strong-eq-hash-table)))
@@ -23,10 +23,15 @@
 			       index
 			       binding
 			       (lambda (definers)
-				 (cons file definers))
-			       (list file))
-			      bindings))))
-	      summaries)))
+				 (if (any (lambda (item)
+					    (equal? item file))
+					  definers)
+				     definers
+				     (cons file definers)))
+			       (list file)))
+			    bindings)))
+	      summaries)
+    index))
 
 (define (conflicts by-name-index)
   (filter (lambda (name-definers-pair)
@@ -75,11 +80,6 @@
     (match-args (tagged-list? tag))
     (lambda (lst)
       (apply handler (cdr lst)))))
-
-(define (build-package package symbol-definer)
-  (let ((things-to-build (get-things-to-build package))
-	(build-method (get-build-method package)))
-    (build-method things-to-build symbol-definer)))
 
 ;;; THESE DEFINE A TREE DATA TYPE
 
@@ -363,7 +363,30 @@
 (define (start-adventure name)
   (let* ((packages (list-packages))
 	 (calling-env (nearest-repl/environment))
-         (game-env (extend-top-level-environment calling-env)))
+         (game-env (extend-top-level-environment calling-env))
+	 (definitions-filenames
+	   (map (lambda (package)
+		  (sanitize-pathstring
+		   (string-append "packages/definitions/"
+				  (symbol->string (get-name package)))))
+		packages))
+	 (build-filenames
+	  (map (lambda (package)
+		 (sanitize-pathstring
+		  (string-append "packages/build/"
+				(symbol->string (get-name package)))))
+	       packages)))
+
+    (let ((conflicting-definers
+	   (conflicts (make-by-name-index
+		       (map (lambda (file)
+			      (summarize-file file game-env))
+			    (append definitions-filenames build-filenames))))))
+      (if (null? conflicting-definers)
+	  'ok
+	  (error "conflicts:" conflicting-definers)))
+								   
+    
     (define (symbol-definer name value)
       (environment-define game-env name value))
     
@@ -371,27 +394,20 @@
 				   (write-line "farewell!")
 				   (ge calling-env)))
     
-    (for-each (lambda (package)
-		(load (sanitize-pathstring
-		       (string-append "packages/definitions/"
-				      (symbol->string (get-name package))))
-		      game-env))
-	      packages)
+    (for-each (lambda (definer) (load definer game-env)) definitions-filenames)
 
-    (symbol-definer 'clock (make-clock))
+    (symbol-definer 'the-clock (make-clock))
     (symbol-definer 'heaven (build '(place heaven)))
 
-    (let ((objects (append-map
-		    (lambda (package)
-		      (load (sanitize-pathstring
-			     (string-append "packages/build/"
-					    (symbol->string (get-name package))))
-			    game-env))
-		    packages)))
-      (symbol-definer 'all-people (filter person? objects))
-      (symbol-definer 'my-avatar (build `(avatar ,name))))
-
     (load (sanitize-pathstring "adventure-game-ui") game-env)
+
+    (let ((objects (apply append (map
+		    (lambda (builder)
+		      (let ((obj-lst (load builder game-env)))
+			(if (list? obj-lst) obj-lst '())))
+		    build-filenames))))
+      (symbol-definer 'all-people (filter (environment-lookup game-env 'person?) objects))
+      (symbol-definer 'my-avatar (build `(avatar ,name))))
     
     (eval '(whats-here) game-env)
     (ge game-env)))
