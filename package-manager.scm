@@ -351,7 +351,7 @@
 			    obj-lst
 			    '())))
 		    packages))))
-      (symbol-definer 'all-people (filter person? objects))
+      (symbol-definer 'all-people (filter (environment-lookup game-env 'person?) objects))
       (symbol-definer 'my-avatar (build `(avatar ,name))))
     
     (eval '(whats-here) game-env)
