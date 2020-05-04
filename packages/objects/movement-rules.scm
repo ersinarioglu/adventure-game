@@ -5,8 +5,8 @@
 (define movement-rules
   (create-package 'movement-rules
                   '()
-                  '()))
+                  (list 'can-go-both-ways)
+                  (list 'rules)))
 
-(add-child! rules movement-rules)
-(append! all-packages (list movement-rules))
+
 (load "adventure-game/packages/objects/can-go-both-ways")

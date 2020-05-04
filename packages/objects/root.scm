@@ -5,9 +5,9 @@
 ;;; root package of package dependency tree
 
 (define root
-  (create-package 'root
-                  '()
-                  '()))
+  (create-package 'root  ;name
+                  '()    ;things to build
+                  (list 'thing)    ;children
+                  '()))  ;parent
 
-(define all-packages (list root))
 (load "adventure-game/packages/objects/thing") 

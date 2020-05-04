@@ -7,7 +7,7 @@
                   (map (lambda (args) `(troll ,args))
 		       '(grendel
                         'registrar))
-                  '()))
+                  '()
+                  (list 'autonomous-agent)))
 
-(add-child! autonomous-agent troll)
-(append! all-packages (list troll))
+

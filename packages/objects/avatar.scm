@@ -5,7 +5,7 @@
 (define avatar
   (create-package 'avatar
                   '()
-                  '()))
+                  '()
+                  (list 'autonomous-agent)))
 
-(add-child! autonomous-agent avatar)
-(append! all-packages (list avatar))
+

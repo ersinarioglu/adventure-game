@@ -295,11 +295,30 @@
 		      (list 'turkey
 			    (list 'ankara))))
 
+(define (longest-path-to-leaves-hash node-in)
+  (let ((hash (make-strong-eq-hash-table)))
+    (let longest-depth ((node node-in))
+      (hash-table/lookup
+       node
+       (lambda () hash-table-ref hash node)
+       (lambda ()
+	 (let ((children (get-children node)))
+	   (if (null? children)
+	       (hash-table-set! hash node 0)
+	       (hash-table-set!
+		hash node (+ 1 (apply max
+				      (map longest-depth
+					   children)))))))))
+    hash))
 
-  
-;;; list packages must return packages in depth first order!
+; returns packages in load order, ie sorted by the depends relation
 (define (list-packages)
-  ())
+  (map car
+       (sort (hash-table->alist
+	      (longest-path-to-leaves-hash
+	       (tree:get-root package-tree)))
+	     (lambda (p1 p2)
+	       (> (cdr p1) (cdr p2))))))
 
 (define (find-package-by-name package-name)
   (find (lambda (package)
@@ -308,14 +327,29 @@
 (define (install-package! point-of-install new-package)
   (let ((parent (find-package-by-name point-of-install))
         (child (find-package-by-name new-package)))
-    (cond ((and parent child) (add-child! parent child)
+    (cond ((and parent child) (add-child! parent new-package)
                   (display "\nInstallation successful."))
           ((and parent (not child)) (display "\nOops, the package you're trying to install doesn't exist."))
           ((and (not parent) child) (display "\nOops, the point of installation doesn't exist- try listing the packages to see which packages are currently installed."))
           (else (display "\nNeither of those packages exist."))
           )))
 
-(define (uninstall-package! package-name) () )
+(define (uninstall-package! package-name)
+  (let ((parent (find-package-by-name (get-parent package-name)))
+        (children (get-subtree-with-root-package package-tree package-name)))
+    (cond ((parent)
+           (cond ((children)
+                  (display (list package-name "was uninstalled along with all children:" children))
+                  (remove-child parent package-name))
+                 (else
+                  (display (list package-name "was uninstalled and had no children"))
+                  (remove-child parent package-name))))
+          (else (display "\nOops, this package can't be uninstalled! 
+It's either not currently installed, or you're trying to uninstall root...")))))
+
+(define (list-things-to-build package-name)
+  (let ((package (find-package-by-name package-name)))
+    (display (get-things-to-build package))))
 
 ;;; GAME STATE
 
@@ -323,22 +357,6 @@
 use environment-define to assign values built by 
 build to symbols in the game environment
 |#
-
-(define clock)
-(define all-places)
-(define heaven)
-(define all-people)
-(define my-avatar)
-
-(define (lowlevel-start-adventure name)
-  (set! clock (make-clock))
-  (set! all-places (build-game))
-  (set! heaven (create-place 'heaven))
-  (set! all-people (build-people all-places))
-  (set! my-avatar
-        (create-avatar name
-                       (random-choice all-places)))
-  (whats-here))
         
 (define (start-adventure name)
   (let* ((packages (list-packages))

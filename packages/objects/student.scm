@@ -9,7 +9,7 @@
                          alyssa-hacker
                          course-6-frosh
                          lambda-man))
-                  '()))
+                  '()
+                  (list 'autonomous-agent)))
 
-(add-child! autonomous-agent student)
-(append! all-packages (list student))
+

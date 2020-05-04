@@ -5,9 +5,9 @@
 (define rules
   (create-package 'rules
                   '()
-                  '()))
+                  (list 'movement-rules 'visibility-rules)
+                  (list 'place)))
                         
-(add-child! place rules)
-(append! all-packages (list rules))
+
 (load "adventure-game/packages/objects/movement-rules")
 (load "adventure-game/packages/objects/visibility-rules")

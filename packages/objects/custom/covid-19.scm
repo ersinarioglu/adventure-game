@@ -5,6 +5,7 @@
 (define covid-19
   (create-package 'covid-19
                 '()
+                '()
                 '()))
-(append! all-packages (list covid-19))
+
                 
