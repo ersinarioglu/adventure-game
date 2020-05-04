@@ -328,6 +328,7 @@
          (game-env (extend-top-level-environment calling-env)))
     (define (symbol-definer name value)
       (environment-define game-env name value))
+    
     (symbol-definer 'retire-game (lambda ()
 				   (write-line "farewell!")
 				   (ge calling-env)))
@@ -339,13 +340,17 @@
 		      game-env))
 	      packages)
 
-    (ge game-env)
+    ;(ge game-env)
     
     (symbol-definer 'clock (make-clock))
     (symbol-definer 'heaven (build '(place heaven)))
 
     (let ((objects (append-map (lambda (package)
-				 (build-package package symbol-definer))
+				 (eval '(build-package package symbol-definer)
+				       (extend-top-level-environment
+					game-env
+					'(symbol-definer package)
+					(list symbol-definer package))))
 			       packages)))
       (symbol-definer 'all-people (filter person? objects))
       (symbol-definer 'my-avatar (build `(avatar ,name))))
